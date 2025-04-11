@@ -159,13 +159,13 @@ class CategorySchema(SQLAlchemyAutoSchema):
     #     return CategorySchema(many=True).dump(user_categories)
 
 
-# class CareNoteSchema(SQLAlchemyAutoSchema):
-#     class Meta:
-#         model = CareNote
-#         load_instance = True
-#     plant = fields.Nested('PlantSchema', exclude=('user', 'care_notes',))
-#     starting_date = fields.Date(format='%Y-%m-%d')
-#     next_care_date = fields.Date(format='%Y-%m-%d')
+class CareNoteSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = CareNote
+        load_instance = True
+    plant = fields.Nested('PlantSchema', exclude=('user', 'care_notes',))
+    starting_date = fields.Date(format='%Y-%m-%d')
+    next_care_date = fields.Date(format='%Y-%m-%d')
 
 # class UserSchema(SQLAlchemyAutoSchema):
 #     class Meta:
