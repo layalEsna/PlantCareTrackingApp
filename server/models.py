@@ -137,15 +137,15 @@ class CareNote(db.Model):
         
         
 
-# class PlantSchema(SQLAlchemyAutoSchema):
-#     class Meta:
-#         model = Plant
-#         load_instance = True
-#     user = fields.Nested('UserSchema', exclude=('plants',))  
-#     category = fields.Nested('CategorySchema', exclude=('plants',))  
+class PlantSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Plant
+        load_instance = True
+    user = fields.Nested('UserSchema', exclude=('plants',))  
+    category = fields.Nested('CategorySchema', exclude=('plants',))  
     
-#     care_notes = fields.Nested('CareNoteSchema', many=True, exclude=('plant',))
-#     created_at = fields.Date(format='%Y-%m-%d')
+    care_notes = fields.Nested('CareNoteSchema', many=True, exclude=('plant',))
+    created_at = fields.Date(format='%Y-%m-%d')
 
 # class CategorySchema(SQLAlchemyAutoSchema):
 #     class Meta:
