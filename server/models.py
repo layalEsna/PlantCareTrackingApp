@@ -167,22 +167,22 @@ class CareNoteSchema(SQLAlchemyAutoSchema):
     starting_date = fields.Date(format='%Y-%m-%d')
     next_care_date = fields.Date(format='%Y-%m-%d')
 
-# class UserSchema(SQLAlchemyAutoSchema):
-#     class Meta:
-#         model = User
-#         include_relationships = True
-#         load_instance = True
+class UserSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = User
+        include_relationships = True
+        load_instance = True
     
-#         exclude = ('password_hash',)
-#     # categories = fields.List(fields.Nested(CategorySchema))
-#     categories = fields.Method('get_categories')
+        exclude = ('password_hash',)
+    # categories = fields.List(fields.Nested(CategorySchema))
+    categories = fields.Method('get_categories')
 
-#     plants = fields.Nested('PlantSchema', many=True, exclude=('user',))  
+    plants = fields.Nested('PlantSchema', many=True, exclude=('user',))  
 
-#     def get_categories(self, user):
-#         if not user.plants:
-#             return []
+    def get_categories(self, user):
+        if not user.plants:
+            return []
     
-#         category_set = {plant.category for plant in user.plants if plant.category}
-#         return CategorySchema(many=True).dump(list(category_set))
-#     # categories = fields.Method('get_categories')
+        category_set = {plant.category for plant in user.plants if plant.category}
+        return CategorySchema(many=True).dump(list(category_set))
+    # categories = fields.Method('get_categories')
