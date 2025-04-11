@@ -147,16 +147,16 @@ class PlantSchema(SQLAlchemyAutoSchema):
     care_notes = fields.Nested('CareNoteSchema', many=True, exclude=('plant',))
     created_at = fields.Date(format='%Y-%m-%d')
 
-# class CategorySchema(SQLAlchemyAutoSchema):
-#     class Meta:
-#         model = Category
-#         load_instance = True
-#     plants = fields.Nested('PlantSchema', many=True, exclude=('category', 'user', 'care_notes'))
+class CategorySchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Category
+        load_instance = True
+    plants = fields.Nested('PlantSchema', many=True, exclude=('category', 'user', 'care_notes'))
     
-#     # categories = fields.Method('get_categories')
-#     # def get_categories(self, user):
-#     #     user_categories = {plant.category for plant in user.plants}
-#     #     return CategorySchema(many=True).dump(user_categories)
+    # categories = fields.Method('get_categories')
+    # def get_categories(self, user):
+    #     user_categories = {plant.category for plant in user.plants}
+    #     return CategorySchema(many=True).dump(user_categories)
 
 
 # class CareNoteSchema(SQLAlchemyAutoSchema):
