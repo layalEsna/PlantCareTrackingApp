@@ -76,23 +76,23 @@ class Plant(db.Model):
             raise ValueError('created_at is required and must be a date type.')
         return created_at
             
-# class Category(db.Model):
-#     __tablename__ = 'categories'
+class Category(db.Model):
+    __tablename__ = 'categories'
 
-#     id = db.Column(db.Integer, primary_key=True)
-#     category_name = db.Column(db.String(100), nullable=False, unique=True)
+    id = db.Column(db.Integer, primary_key=True)
+    category_name = db.Column(db.String(100), nullable=False, unique=True)
     
-#     plants = db.relationship('Plant', back_populates='category')
+    plants = db.relationship('Plant', back_populates='category')
 
-#     @validates('category_name')
-#     def validate_category_name(self, key, category_name):
-#         if not category_name or not isinstance(category_name, str):
-#             raise ValueError('Category_name is required and must be a string.')
-#         if len(category_name) < 5 or len(category_name) > 100:
-#             raise ValueError('category_name must be between 5 and 100 characters inclusive.')
-#         return category_name
-#     def __hash__(self):
-#         return hash(self.id)
+    @validates('category_name')
+    def validate_category_name(self, key, category_name):
+        if not category_name or not isinstance(category_name, str):
+            raise ValueError('Category_name is required and must be a string.')
+        if len(category_name) < 5 or len(category_name) > 100:
+            raise ValueError('category_name must be between 5 and 100 characters inclusive.')
+        return category_name
+    def __hash__(self):
+        return hash(self.id)
 
 # class CareNote(db.Model):
 #     __tablename__ = 'care_notes'
