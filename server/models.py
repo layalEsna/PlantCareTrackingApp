@@ -48,33 +48,33 @@ class User(db.Model):
         return result
 
     
-# class Plant(db.Model):
-#     __tablename__ = 'plants'
+class Plant(db.Model):
+    __tablename__ = 'plants'
 
-#     id = db.Column(db.Integer, primary_key=True)
-#     plant_name = db.Column(db.String(100), nullable=False)
-#     image = db.Column(db.String, nullable=True)
-#     created_at = db.Column(db.Date, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    plant_name = db.Column(db.String(100), nullable=False)
+    image = db.Column(db.String, nullable=True)
+    created_at = db.Column(db.Date, nullable=False)
 
-#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-#     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
 
-#     user = db.relationship('User', back_populates='plants')
-#     category = db.relationship('Category', back_populates='plants')
-#     care_notes = db.relationship('CareNote', back_populates='plant', cascade="all, delete-orphan")
+    user = db.relationship('User', back_populates='plants')
+    category = db.relationship('Category', back_populates='plants')
+    care_notes = db.relationship('CareNote', back_populates='plant', cascade="all, delete-orphan")
 
-#     @validates('plant_name')
-#     def validate_plant_name(self, key, plant_name):
-#         if not plant_name or not isinstance(plant_name, str):
-#             raise ValueError('Plant_name is required and must be a string.')
-#         if len(plant_name) < 2 or len(plant_name) > 100:
-#             raise ValueError('plant_name must be between 2 and 100 characters inclusive.')
-#         return plant_name
-#     @validates('created_at')
-#     def validate_created_at(self, key, created_at):
-#         if not created_at or not isinstance(created_at, date):
-#             raise ValueError('created_at is required and must be a date type.')
-#         return created_at
+    @validates('plant_name')
+    def validate_plant_name(self, key, plant_name):
+        if not plant_name or not isinstance(plant_name, str):
+            raise ValueError('Plant_name is required and must be a string.')
+        if len(plant_name) < 2 or len(plant_name) > 100:
+            raise ValueError('plant_name must be between 2 and 100 characters inclusive.')
+        return plant_name
+    @validates('created_at')
+    def validate_created_at(self, key, created_at):
+        if not created_at or not isinstance(created_at, date):
+            raise ValueError('created_at is required and must be a date type.')
+        return created_at
             
 # class Category(db.Model):
 #     __tablename__ = 'categories'
