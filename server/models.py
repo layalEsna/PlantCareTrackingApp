@@ -94,46 +94,46 @@ class Category(db.Model):
     def __hash__(self):
         return hash(self.id)
 
-# class CareNote(db.Model):
-#     __tablename__ = 'care_notes'
+class CareNote(db.Model):
+    __tablename__ = 'care_notes'
 
-#     id = db.Column(db.Integer, primary_key=True)
-#     care_type = db.Column(db.String(100), nullable=False)
-#     frequency = db.Column(db.Integer, nullable=False)
-#     starting_date = db.Column(db.Date, nullable=False)
-#     next_care_date = db.Column(db.Date, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    care_type = db.Column(db.String(100), nullable=False)
+    frequency = db.Column(db.Integer, nullable=False)
+    starting_date = db.Column(db.Date, nullable=False)
+    next_care_date = db.Column(db.Date, nullable=False)
    
 
-#     plant_id = db.Column(db.Integer, db.ForeignKey('plants.id'), nullable=False)
-#     plant = db.relationship('Plant', back_populates='care_notes')
+    plant_id = db.Column(db.Integer, db.ForeignKey('plants.id'), nullable=False)
+    plant = db.relationship('Plant', back_populates='care_notes')
 
-#     @validates('care_type')
-#     def validate_care_type(self, key, care_type):
-#         if not care_type or not isinstance(care_type, str):
-#             raise ValueError('care_type is required and must be a string.')
-#         if len(care_type) < 5 or len(care_type) > 100:
-#             raise ValueError('care_type must be between 5 and 100 characters inclusive.')
-#         return care_type
+    @validates('care_type')
+    def validate_care_type(self, key, care_type):
+        if not care_type or not isinstance(care_type, str):
+            raise ValueError('care_type is required and must be a string.')
+        if len(care_type) < 5 or len(care_type) > 100:
+            raise ValueError('care_type must be between 5 and 100 characters inclusive.')
+        return care_type
     
-#     @validates('frequency')
-#     def validate_frequency(self, key, frequency):
-#         if not frequency or not isinstance(frequency, int):
-#             raise ValueError('Frequency is required and must be an integer.')
-#         if frequency < 1:
-#             raise ValueError('Frequency must be a positive integer.')
-#         return frequency
+    @validates('frequency')
+    def validate_frequency(self, key, frequency):
+        if not frequency or not isinstance(frequency, int):
+            raise ValueError('Frequency is required and must be an integer.')
+        if frequency < 1:
+            raise ValueError('Frequency must be a positive integer.')
+        return frequency
 
-#     @validates('starting_date')
-#     def validate_starting_date(self, key, starting_date):
-#         if not starting_date or not isinstance(starting_date, date):
-#             raise ValueError('starting_date is required and must be a date type.')
-#         return starting_date
+    @validates('starting_date')
+    def validate_starting_date(self, key, starting_date):
+        if not starting_date or not isinstance(starting_date, date):
+            raise ValueError('starting_date is required and must be a date type.')
+        return starting_date
         
-#     @validates('next_care_date')
-#     def validate_next_care_date(self, key, next_care_date):
-#         if not next_care_date or not isinstance(next_care_date, date):
-#             raise ValueError('next_care_date is required and must be a date type.')
-#         return next_care_date
+    @validates('next_care_date')
+    def validate_next_care_date(self, key, next_care_date):
+        if not next_care_date or not isinstance(next_care_date, date):
+            raise ValueError('next_care_date is required and must be a date type.')
+        return next_care_date
         
         
 
