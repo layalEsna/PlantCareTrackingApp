@@ -1,37 +1,37 @@
 
 
-// import { useContext } from "react";
-// import AppContext from "./AppContext";
-// import { Link } from "react-router-dom";
+import { useContext } from "react";
+import AppContext from "./AppContext";
+import { Link } from "react-router-dom";
 
 
-// const LandingPage = () => {
+const LandingPage = () => {
 
-//     const { user, userCategories } = useContext(AppContext)
-//    console.log('🟢user categories', userCategories)
+    const { user, userCategories } = useContext(AppContext)
+   console.log('🟢user categories', userCategories)
 
-//     if (!user || !user.username) {
-//         return <p>User not found...</p>
-//     }
+    if (!user || !user.username) {
+        return <p>User not found...</p>
+    }
     
-//     return (
-//         <div>
-//             {user.username && <h3>Welcome: {user.username}</h3>}
+    return (
+        <div>
+            {user.username && <h3>Welcome: {user.username}</h3>}
 
-//             <div>
-//                 {userCategories && userCategories.length > 0 && (
+            <div>
+                {userCategories && userCategories.length > 0 && (
                     
-//                     userCategories.map((cat) => (
+                    userCategories.map((cat) => (
                         
-//                         <div key={cat.id}>
-//                             <Link to={`/category/${cat.id}`}>{cat.category_name}</Link>
-//                         </div>
-//                     ))
-//                 )}
-//             </div>
+                        <div key={cat.id}>
+                            <Link to={`/category/${cat.id}`}>{cat.category_name}</Link>
+                        </div>
+                    ))
+                )}
+            </div>
 
-//         </div>
-//     )
-// }
+        </div>
+    )
+}
 
-// export default LandingPage
+export default LandingPage
