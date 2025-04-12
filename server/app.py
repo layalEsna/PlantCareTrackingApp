@@ -1,51 +1,49 @@
-# # app.py
+# app.py
 
-# from flask import Flask, request, make_response, jsonify, session, redirect, url_for
-# from flask_restful import Api, Resource
-# from flask_cors import CORS
-# from server.config import Config
-# from server.extensions import db, ma  # Import extensions from extensions.py
-# from datetime import datetime
-# from dotenv import load_dotenv
-# from flask_migrate import Migrate
+from flask import Flask, request, make_response, jsonify, session, redirect, url_for
+from flask_restful import Api, Resource
+from flask_cors import CORS
+from server.config import Config
+from server.extensions import db, ma  # Import extensions from extensions.py
+from datetime import datetime
+from dotenv import load_dotenv
+from flask_migrate import Migrate
 
-# load_dotenv()
-# import os
+load_dotenv()
+import os
 
-# # Initialize Flask app
-# app = Flask(__name__)
+# Initialize Flask app
+app = Flask(__name__)
 
-# # Set app configurations
-# app.config.from_object(Config)
-# app.config['FLASK_DEBUG'] = 1
+# Set app configurations
+app.config.from_object(Config)
+app.config['FLASK_DEBUG'] = 1
 
-# # Initialize extensions
-# db.init_app(app)
-# ma.init_app(app)
-# migrate = Migrate(app, db)
-
-
-# from server.models import User, Plant, Category, CareNote, UserSchema, CategorySchema, PlantSchema, CareNoteSchema
-
-# # Initialize API
-# api = Api(app)
-# CORS(app, supports_credentials=True)
-
-# # Routes and other app setup...
+# Initialize extensions
+db.init_app(app)
+ma.init_app(app)
+migrate = Migrate(app, db)
 
 
-# # Define routes and other logic...
+from server.models import User, Plant, Category, CareNote, UserSchema, CategorySchema, PlantSchema, CareNoteSchema
 
-# @app.route('/')
-# def index():
-#     return '<h1>Project Server</h1>'
+# Initialize API
+api = Api(app)
+CORS(app, supports_credentials=True)
 
-# @app.route('/logout')
-# def logout():
-#     session.clear() 
-#     return redirect(url_for('index')) 
+# Routes and other app setup...
 
 
+# Define routes and other logic...
+
+@app.route('/')
+def index():
+    return '<h1>Project Server</h1>'
+
+@app.route('/logout')
+def logout():
+    session.clear() 
+    return redirect(url_for('index')) 
 # class CheckSession(Resource):
 #     def get(self):
 #         user_id = session.get('user_id')
@@ -241,18 +239,20 @@
 #         ], 200
 
     
-# api.add_resource(CheckSession,'/check_session')
+api.add_resource(CheckSession,'/check_session')
 # api.add_resource(Signup, '/signup')
-# api.add_resource(Login, '/login')
+api.add_resource(Login, '/login')
 # api.add_resource(NewPlant, '/new_plant')
 # api.add_resource(Categories, '/categories')
 # api.add_resource(NewCategory, '/new_category')
 
 
 
-# if __name__ == '__main__':
-#     print("🔥 Running from the correct app file 🔥")
-#     app.run(port=5555, debug=True)
+if __name__ == '__main__':
+    print("🔥 Running from the correct app file 🔥")
+    app.run(port=5555, debug=True)
 
        
-        
+   #python -m server.app    
+   # http://localhost:5555/check_session
+ # 

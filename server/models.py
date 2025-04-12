@@ -18,7 +18,8 @@ class User(db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
 
     plants = db.relationship('Plant', back_populates='user')
-
+    categories = db.relationship('Category', secondary='plants', back_populates='users')
+    care_notes = db.relationship('CareNote', secondary='plants', back_populates='users')
     @validates('username')
     def validate_username(self, key, username):
         if not username or not isinstance(username, str):
@@ -83,6 +84,8 @@ class Category(db.Model):
     category_name = db.Column(db.String(100), nullable=False, unique=True)
     
     plants = db.relationship('Plant', back_populates='category')
+    users = db.relationship('User', secondary='plants', back_populates='categories')
+    care_notes = db.relationship('CareNote', secondary='plants', back_populates='categories')
 
     @validates('category_name')
     def validate_category_name(self, key, category_name):
@@ -106,6 +109,9 @@ class CareNote(db.Model):
 
     plant_id = db.Column(db.Integer, db.ForeignKey('plants.id'), nullable=False)
     plant = db.relationship('Plant', back_populates='care_notes')
+    
+    users = db.relationship('User', secondary='plants', back_populates='care_notes')
+    categories = db.relationship('Category', secondary='plants', back_populates='care_notes')
 
     @validates('care_type')
     def validate_care_type(self, key, care_type):
