@@ -2,7 +2,7 @@
 # models.py
 
 from server.extensions import db, bcrypt  # Use db from extensions.py
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 from sqlalchemy.orm import validates, relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 from marshmallow import fields
@@ -17,7 +17,7 @@ class User(db.Model):
     username = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
 
-    plants = db.relationship('Plant', back_populates='user')
+    plants = db.relationship('Plant', back_populates='user', lazy='joined')
     # categories = db.relationship('Category', secondary='plants', back_populates='users')
     # care_notes = db.relationship('CareNote', secondary='plants', back_populates='users')
     @validates('username')
@@ -145,9 +145,10 @@ class PlantSchema(SQLAlchemyAutoSchema):
         load_instance = True
     user = fields.Nested('UserSchema', exclude=('plants',))  
     category = fields.Nested('CategorySchema', exclude=('plants',))  
-    
+    # category_id = fields.Int()
     care_notes = fields.Nested('CareNoteSchema', many=True, exclude=('plant',))
     created_at = fields.Date(format='%Y-%m-%d')
+    category_id = auto_field()
 
 class CategorySchema(SQLAlchemyAutoSchema):
     class Meta:

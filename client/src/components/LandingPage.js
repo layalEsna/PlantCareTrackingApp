@@ -24,7 +24,9 @@ const LandingPage = () => {
                     userCategories.map((cat) => (
                         
                         <div key={cat.id}>
-                            <Link to={`/category/${cat.id}`}>{cat.category_name}</Link>
+                            <Link to={`/users/categories/${cat.id}`}
+                            state={{categoryId: cat.id}}
+                            >{cat.category_name}</Link>
                         </div>
                     ))
                 )}
