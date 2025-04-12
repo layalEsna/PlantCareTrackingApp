@@ -129,18 +129,6 @@ class Login(Resource):
             'username': user.username,
             'id': user.id
         }, 200   
-
-# class NewPlant(Resource):
-#     def post(self):
-#         user_id = session.get('user_id') 
-#         if not user_id:
-#             return {'error': 'Unauthorized'}, 401
-#         user = User.query.filter(User.id == user_id).first()
-
-#         if not user:
-#             return {'error': 'Only users can create new plants.'}, 401
-#         data = request.get_json()
-#         plant_name = data.get('plant_name')
 #         image = data.get('image')
 #         created_at = data.get('created_at')
        
@@ -169,29 +157,70 @@ class Login(Resource):
 
 #         new_plant = Plant(
 #                 plant_name=plant_name,
-#                 image=image,
-#                 created_at=created_at,
-#                 user_id=user_id,
-#                 category_id=category_id
-#             )
+
+
+class NewPlant(Resource):
+    def post(self):
+        user_id = session.get('user_id') 
+        if not user_id:
+            return {'error': 'Unauthorized'}, 401
+        user = User.query.filter(User.id == user_id).first()
+
+        if not user:
+            return {'error': 'Only users can create new plants.'}, 401
+        data = request.get_json()
+        plant_name = data.get('plant_name')
+        image = data.get('image')
+        created_at = data.get('created_at')
+       
+        category_id = data.get('category_id')
+
+        if not plant_name or not isinstance(plant_name, str):
+            return {'error': 'Plant name is required and must be a string.'}, 400
+        if len(plant_name) < 2 or len(plant_name) > 100:
+            return {'error': 'Plant name must be between 2 and 100 characters.'}, 400
+        
+        try:
+            created_at = datetime.strptime(created_at, "%Y-%m-%d")
+        except (ValueError, TypeError):
+            return {'error': 'created_at is required and must be in YYYY-MM-DD format.'}, 400
+
+        if not isinstance(user_id, int):
+            return {'error': 'user_id is required and must be an integer.'}, 400
+        if not isinstance(category_id, int):
+            return {'error': 'category_id is required and must be an integer.'}, 400
+
+        category = Category.query.filter(Category.id == category_id).first()
+        if not category:
+            return {'error': 'Category not found'}, 400
+
+
+
+        new_plant = Plant(
+                plant_name=plant_name,
+                image=image,
+                created_at=created_at,
+                user_id=user_id,
+                category_id=category_id
+            )
 
             
-#         db.session.add(new_plant)
-#         db.session.commit()
+        db.session.add(new_plant)
+        db.session.commit()
 
-#         return {
-#                 'plant': {
-#                     'id': new_plant.id,
-#                     'plant_name': new_plant.plant_name,
-#                     'image': new_plant.image,
-#                     'created_at': new_plant.created_at.strftime("%Y-%m-%d"),
-#                     'user_id': new_plant.user_id,
-#                     'category': {
-#                         'id': category.id,
-#                         'category_name': category.category_name
-#                     }
-#                 }
-#             }, 201  
+        return {
+                'plant': {
+                    'id': new_plant.id,
+                    'plant_name': new_plant.plant_name,
+                    'image': new_plant.image,
+                    'created_at': new_plant.created_at.strftime("%Y-%m-%d"),
+                    'user_id': new_plant.user_id,
+                    'category': {
+                        'id': category.id,
+                        'category_name': category.category_name
+                    }
+                }
+            }, 201  
 
 
 # class NewCategory(Resource):
