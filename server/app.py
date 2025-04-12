@@ -98,37 +98,37 @@ class CheckSession(Resource):
 #             return make_response(jsonify({'error': f'Internal error: {e}'}), 500)
 
 
-# class Login(Resource):
-#     def post(self):
-#         data = request.get_json()
-#         username = data.get('username')
-#         password = data.get('password')
+class Login(Resource):
+    def post(self):
+        data = request.get_json()
+        username = data.get('username')
+        password = data.get('password')
 
-#         print(f"Login attempt: username='{username}', password='{password}'")
+        print(f"Login attempt: username='{username}', password='{password}'")
 
-#         if not all([username, password]):
-#             print("Error: Missing username or password")
-#             return {'error': 'All fields are required'}, 400
+        if not all([username, password]):
+            print("Error: Missing username or password")
+            return {'error': 'All fields are required'}, 400
 
-#         user = User.query.filter(User.username == username).first()
+        user = User.query.filter(User.username == username).first()
 
-#         if user:
-#             print(f"User found: username='{user.username}', password_hash='{user.password_hash}'")
-#         else:
-#             print("User not found in database.")
+        if user:
+            print(f"User found: username='{user.username}', password_hash='{user.password_hash}'")
+        else:
+            print("User not found in database.")
 
-#         if not user or not user.check_password(password):
-#             print("Error: Incorrect username or password")
-#             return {'error': 'Username or password not found'}, 404
+        if not user or not user.check_password(password):
+            print("Error: Incorrect username or password")
+            return {'error': 'Username or password not found'}, 404
 
-#         print("Login successful")
+        print("Login successful")
 
-#         session['user_id'] = user.id
-#         session.permanent = True
-#         return {
-#             'username': user.username,
-#             'id': user.id
-#         }, 200   
+        session['user_id'] = user.id
+        session.permanent = True
+        return {
+            'username': user.username,
+            'id': user.id
+        }, 200   
 
 # class NewPlant(Resource):
 #     def post(self):
