@@ -44,22 +44,22 @@ def index():
 def logout():
     session.clear() 
     return redirect(url_for('index')) 
-# class CheckSession(Resource):
-#     def get(self):
-#         user_id = session.get('user_id')
-#         if not user_id:
-#             return {'error': 'Unauthorized.'}, 401
-#         user = User.query.get(user_id)
-#         if not user:
-#             return {'error': 'User not found.'}, 404
+class CheckSession(Resource):
+    def get(self):
+        user_id = session.get('user_id')
+        if not user_id:
+            return {'error': 'Unauthorized.'}, 401
+        user = User.query.get(user_id)
+        if not user:
+            return {'error': 'User not found.'}, 404
         
         
-#         user_schema = UserSchema()
+        user_schema = UserSchema()
         
-#         result_user = user_schema.dump(user)
+        result_user = user_schema.dump(user)
         
         
-#         return result_user, 200
+        return result_user, 200
     
 
 # class Signup(Resource):
