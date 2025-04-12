@@ -7,7 +7,7 @@ export const AppProvider = ({ children }) => {
 
     const [user, setUser] = useState(null)
     const [plants, setPlants] = useState([])
-    const [categories, setCategories] = useState([])
+    const [userCategories, setUserCategories] = useState([])
 
 
 
@@ -20,14 +20,12 @@ export const AppProvider = ({ children }) => {
                 return res.json()
             })
             .then(data => {
-                const seen = new Set()
-                const uniqueCategories = data.categories.filter(cat => {
-                    if (seen.has(cat.id)) return false
-                    seen.add(cat.id)
-                    return true
-                })
+                const uniqueCategories = [
+                    ...new Map(data.categories.map(cat => [cat.category_name, cat])).values()
+                  ]
+                                  
                 setUser(data)
-                setCategories(uniqueCategories)
+                setUserCategories(uniqueCategories)
                 setPlants(data.plants)
             })
             .catch(e => console.error(e))
@@ -41,7 +39,7 @@ export const AppProvider = ({ children }) => {
             user,
             setUser,
             plants,
-            categories,
+            userCategories,
             fetchUserData
 
         }}>

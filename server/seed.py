@@ -44,7 +44,7 @@ if __name__ == '__main__':
             ('Peace Lily', 'image3.jpg', '2024-03-02', user3, categories[2]),
             ('Cactus', 'image4.jpg', '2023-06-02', user4, categories[0]),
             ('Snake Plant', 'image5.jpg', '2021-10-02', user2, categories[0]),
-            ('Fern', 'image6.jpg', '2023-03-12', user4, categories[1]),
+            ('Fern', 'image6.jpg', '2023-03-12', user3, categories[1]),
             ('Rose', 'image7.jpg', '2023-01-01', user1, categories[2]),
             ('Orchid', 'image8.jpg', '2023-02-02', user3, categories[1])
         ]

@@ -7,7 +7,8 @@
 
 // const LandingPage = () => {
 
-//     const { user } = useContext(AppContext)
+//     const { user, userCategories } = useContext(AppContext)
+//    console.log('🟢user categories', userCategories)
 
 //     if (!user || !user.username) {
 //         return <p>User not found...</p>
@@ -16,6 +17,18 @@
 //     return (
 //         <div>
 //             {user.username && <h3>Welcome: {user.username}</h3>}
+
+//             <div>
+//                 {userCategories && userCategories.length > 0 && (
+                    
+//                     userCategories.map((cat) => (
+                        
+//                         <div key={cat.id}>
+//                             <Link to={`/category/${cat.id}`}>{cat.category_name}</Link>
+//                         </div>
+//                     ))
+//                 )}
+//             </div>
 
 //         </div>
 //     )
