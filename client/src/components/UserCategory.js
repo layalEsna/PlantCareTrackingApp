@@ -4,6 +4,7 @@
 import { useContext } from "react"
 import AppContext from "./AppContext"
 import { useLocation } from "react-router-dom"
+import { Link } from "react-router-dom"
 const UserCategory = () => {
 
     const {user, userCategories} = useContext(AppContext)
@@ -31,8 +32,11 @@ const UserCategory = () => {
                 .filter(plant => plant.user_id === user.id)
                 .map(plant => (
                     <div key={plant.id}>
-                        <h5>🌱Plant Name: {plant.plant_name}</h5>
-                        <p>Care Notes:</p>
+                        <Link to={`/plant/${plant.id}`}
+                        state={{plantId: plant.id}}>🌱Plant Name: {plant.plant_name}</Link>
+
+
+                        {/* <p>Care Notes:</p>
                         {plant.care_notes && plant.care_notes.length ? (
                             plant.care_notes.map(note => (
                                 <ol key={note.id}>
@@ -44,7 +48,10 @@ const UserCategory = () => {
                         ))
                         ): (
                             <p>🌿</p>
-                        ) }
+                        ) } */}
+
+
+
                     </div>
                 ))
             
