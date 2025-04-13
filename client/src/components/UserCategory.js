@@ -1,3 +1,6 @@
+
+
+
 import { useContext } from "react"
 import AppContext from "./AppContext"
 import { useLocation } from "react-router-dom"
@@ -12,7 +15,6 @@ const UserCategory = () => {
             const category = userCategories.find(cat => cat.id === categoryId)
             
 
-    // const selectedCategory = userCategories.find(cat => cat.id === )
     if (!category) {
         return <p>Category info not available...</p>
     }
@@ -22,21 +24,53 @@ const UserCategory = () => {
 
     return (
         <div>
-            <h4>Username: {user.username} </h4>
-            <h5>Category: {category.category_name}</h5>
-            {category.plants && category.plants.length ? (
-                category.plants.map(plant=> (
+            <h3>Username: {user.username} </h3>
+            <h4>Category: {category.category_name}</h4>
+
+            {category.plants
+                .filter(plant => plant.user_id === user.id)
+                .map(plant => (
                     <div key={plant.id}>
-                        <p>{plant.plant_name}</p>
-                        
-                </div>
-            ))
-            ): (
-                
-                <p>No Plants</p>
-            )}
+                        <h5>🌱Plant Name: {plant.plant_name}</h5>
+                        <p>Care Notes:</p>
+                        {plant.care_notes && plant.care_notes.length ? (
+                            plant.care_notes.map(note => (
+                                <ol key={note.id}>
+                                    <li>Care Type: {note.care_type}</li>
+                                    <li>Frequency: {note.frequency}</li>
+                                    <li>Started Date: {note.starting_date}</li>
+                                    <li>Up Coming Date: {note.next_care_date}</li>
+                            </ol>
+                        ))
+                        ): (
+                            <p>🌿</p>
+                        ) }
+                    </div>
+                ))
+            
+            }
+            
         </div>
     )
 }
 
 export default UserCategory
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

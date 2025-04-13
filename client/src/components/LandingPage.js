@@ -14,7 +14,7 @@ const LandingPage = () => {
     if (!user || !user.username) {
         return <p>User not found...</p>
     }
-    
+        
     return (
         <div>
             {user.username && <h3>Welcome: {user.username}</h3>}
@@ -34,7 +34,7 @@ const LandingPage = () => {
             </div>
 
             <PlantForm />
-            <p>create a new category if is not in the list:</p>
+            <p>create a new category if it is not in the list:</p>
 
         </div>
     )

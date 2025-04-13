@@ -149,6 +149,7 @@ class PlantSchema(SQLAlchemyAutoSchema):
     care_notes = fields.Nested('CareNoteSchema', many=True, exclude=('plant',))
     created_at = fields.Date(format='%Y-%m-%d')
     category_id = auto_field()
+    user_id = auto_field()
 
 class CategorySchema(SQLAlchemyAutoSchema):
     class Meta:
