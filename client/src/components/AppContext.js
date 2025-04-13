@@ -73,7 +73,8 @@ export const AppProvider = ({ children }) => {
             fetchUserData,
             setPlants,
             setUserCategories,
-            allCategories
+            allCategories,
+            setAllCategories
 
         }}>
             {children}

@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import * as Yup from 'yup'
 
 const NewCategory = () => {
-    const {setAllCategories} = useContext(AppContext)
+    const {setAllCategories, allCategories} = useContext(AppContext)
 
     const formik = useFormik({
         initialValues: {
@@ -32,11 +32,14 @@ const NewCategory = () => {
                 }return res.json()
             })
                 .then(data => {
-                    console.log('🟢categories', data)
-
-                    // setAllCategories(prev => {
-                    //     const existedCategory = 
-                    // })
+                    console.log("🟢 Response from /new_category:", data)
+                    const existedCategory = allCategories.some(cat => cat.id === data.id)
+                        if (existedCategory) {
+                            return 
+                        }
+                        else {
+                            setAllCategories (prev => [...prev, data])
+                        }
 
                 
             })
@@ -47,6 +50,28 @@ const NewCategory = () => {
 
     return (
         <div>
+             <p>create a new category if it is not in the list:</p>
+
+            <form onSubmit={formik.handleSubmit}>
+            <div>
+                <label htmlFor="category_name">Add New Category</label>
+                <input
+                    id="category_name"
+                    name="category_name"
+                    value={formik.values.category_name}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                
+                />
+
+            </div>
+            {formik.errors.category_name && formik.touched.category_name && (
+                <div className="error">{formik.errors.category_name}</div>
+            )}
+            <button type="submit">
+                Add A New Category
+            </button>
+        </form>
 
         </div>
     )

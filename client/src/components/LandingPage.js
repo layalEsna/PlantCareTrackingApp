@@ -34,8 +34,7 @@ const LandingPage = () => {
             </div>
 
             <PlantForm />
-            <p>create a new category if it is not in the list:</p>
-
+           
         </div>
     )
 }

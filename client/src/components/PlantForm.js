@@ -4,6 +4,7 @@ import AppContext from "./AppContext";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import NewCategory from "./NewCategory";
 
 // console.log(first)
 const PlantForm = () => {
@@ -155,7 +156,7 @@ const PlantForm = () => {
             </form>
 
             <div>
-                {/* <NewCategory /> */}
+                <NewCategory />
             </div>
         </div>
     )
