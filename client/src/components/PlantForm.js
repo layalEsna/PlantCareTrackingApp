@@ -77,6 +77,16 @@ const PlantForm = () => {
                     setPlants(prev => [
                         ...prev, data.plant
                     ])
+                    formik.resetForm({
+                        values: {
+                          plant_name: '',
+                          image: '',
+                          created_at: '',
+                          category_id: '',
+                        },
+                        touched: {},
+                        errors: {}
+                      })
             })
             .catch(e => console.error(e.message))
         }

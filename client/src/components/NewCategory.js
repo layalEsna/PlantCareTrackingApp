@@ -5,8 +5,9 @@ import * as Yup from 'yup'
 
 const NewCategory = () => {
     const {setAllCategories, allCategories} = useContext(AppContext)
-
+    
     const formik = useFormik({
+        // Category name is requierd.
         initialValues: {
             category_name: ''
         },
@@ -40,6 +41,10 @@ const NewCategory = () => {
                         else {
                             setAllCategories (prev => [...prev, data])
                         }
+                        formik.resetForm({ values: { category_name: '' }, touched: {}, errors: {} });
+
+                    // formik.setValues({ category_name: '' })
+                    // resetForm({ values: { category_name: '' }, touched: {}, errors: {} }); // ✅ clear value + touched + errors
 
                 
             })
