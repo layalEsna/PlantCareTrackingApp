@@ -8,7 +8,7 @@ export const AppProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [plants, setPlants] = useState([])
     const [userCategories, setUserCategories] = useState([])
-
+    const [allCategories, setAllCategories] = useState([])
 
 
     function fetchUserData() {
@@ -23,12 +23,12 @@ export const AppProvider = ({ children }) => {
                 const uniqueCategories = [
                     ...new Map(data.categories.map(cat => [cat.category_name, cat])).values()
                 ]
-                console.log('🌱 All plants from check_session:', data.plants)
+                // console.log('🌱 All plants from check_session:', data.plants)
 
                 const enhancedCategories = uniqueCategories.map(cat => {
                     const categoryPlants = data.plants.filter(plant => {
                     
-                        //   return Number(plant.category_id) === Number(cat.id)
+
                         return plant.category_id === cat.id
                     })
                     return { ...cat, plants: categoryPlants }
@@ -36,6 +36,8 @@ export const AppProvider = ({ children }) => {
                   
                                
                 setUser(data)
+                
+                  
                 setUserCategories(enhancedCategories)
                 setPlants(data.plants)
             })
@@ -45,13 +47,30 @@ export const AppProvider = ({ children }) => {
         fetchUserData()
     }, [])
 
+    useEffect(() => {
+        fetch('/categories')
+            .then(res => {
+                if (!res.ok) {
+                throw new Error('Failed to fetch data.')
+            }return res.json()
+        })
+            .then(data => {
+                setAllCategories(data)
+                // console.log('➡️all cats', data)
+        })
+        .catch()
+    }, [])
+
     return (
         <AppContext.Provider value={{
             user,
             setUser,
             plants,
             userCategories,
-            fetchUserData
+            fetchUserData,
+            setPlants,
+            setUserCategories,
+            allCategories
 
         }}>
             {children}

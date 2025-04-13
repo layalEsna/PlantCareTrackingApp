@@ -17,8 +17,8 @@ const UserCategory = () => {
         return <p>Category info not available...</p>
     }
     
-    console.log("Selected Category:", category)
-console.log("Category Plants:", category?.plants)
+    // console.log("Selected Category:", category)
+// console.log("Category Plants:", category?.plants)
 
     return (
         <div>

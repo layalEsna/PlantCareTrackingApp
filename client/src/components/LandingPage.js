@@ -3,12 +3,13 @@
 import { useContext } from "react";
 import AppContext from "./AppContext";
 import { Link } from "react-router-dom";
+import PlantForm from "./PlantForm";
 
 
 const LandingPage = () => {
 
     const { user, userCategories } = useContext(AppContext)
-   console.log('🟢user categories', userCategories)
+//    console.log('🟢user categories', userCategories)
 
     if (!user || !user.username) {
         return <p>User not found...</p>
@@ -31,6 +32,9 @@ const LandingPage = () => {
                     ))
                 )}
             </div>
+
+            <PlantForm />
+            <p>create a new category if is not in the list:</p>
 
         </div>
     )

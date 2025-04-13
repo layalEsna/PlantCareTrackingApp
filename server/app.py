@@ -129,34 +129,8 @@ class Login(Resource):
             'username': user.username,
             'id': user.id
         }, 200   
-#         image = data.get('image')
-#         created_at = data.get('created_at')
-       
-#         category_id = data.get('category_id')
-
-#         if not plant_name or not isinstance(plant_name, str):
-#             return {'error': 'Plant name is required and must be a string.'}, 400
-#         if len(plant_name) < 2 or len(plant_name) > 100:
-#             return {'error': 'Plant name must be between 2 and 100 characters.'}, 400
-        
-#         try:
-#             created_at = datetime.strptime(created_at, "%Y-%m-%d")
-#         except (ValueError, TypeError):
-#             return {'error': 'created_at is required and must be in YYYY-MM-DD format.'}, 400
-
-#         if not isinstance(user_id, int):
-#             return {'error': 'user_id is required and must be an integer.'}, 400
-#         if not isinstance(category_id, int):
-#             return {'error': 'category_id is required and must be an integer.'}, 400
-
-#         category = Category.query.filter(Category.id == category_id).first()
-#         if not category:
-#             return {'error': 'Category not found'}, 400
 
 
-
-#         new_plant = Plant(
-#                 plant_name=plant_name,
 
 
 class NewPlant(Resource):
@@ -223,57 +197,57 @@ class NewPlant(Resource):
             }, 201  
 
 
-# class NewCategory(Resource):
-#     def post(self):
-#         user_id = session.get('user_id')
-#         if not user_id:
-#             return {'error': 'Unauthorized'}, 401
+class NewCategory(Resource):
+    def post(self):
+        user_id = session.get('user_id')
+        if not user_id:
+            return {'error': 'Unauthorized'}, 401
 
-#         user = User.query.get(user_id)
-#         if not user:
-#             return {'error': 'Only users can create categories.'}, 401
+        user = User.query.get(user_id)
+        if not user:
+            return {'error': 'Only users can create categories.'}, 401
 
-#         data = request.get_json()
-#         category_name = data.get('category_name')
+        data = request.get_json()
+        category_name = data.get('category_name')
 
-#         if not category_name or not isinstance(category_name, str):
-#             return {'error': 'Category name is required and must be a string.'}, 400
-#         if len(category_name) < 5 or len(category_name) > 100:
-#             return {'error': 'Category name must be between 5 and 100 characters.'}, 400
+        if not category_name or not isinstance(category_name, str):
+            return {'error': 'Category name is required and must be a string.'}, 400
+        if len(category_name) < 5 or len(category_name) > 100:
+            return {'error': 'Category name must be between 5 and 100 characters.'}, 400
 
-#         existing_category = Category.query.filter_by(category_name=category_name, user_id=user_id).first()
-#         if existing_category:
-#             return {'error': 'Category already exists.'}, 400
+        existing_category = Category.query.filter_by(category_name=category_name).first()
+        if existing_category:
+            return {'error': 'Category already exists.'}, 400
 
-#         new_category = Category(category_name=category_name, user_id=user_id)
-#         db.session.add(new_category)
-#         db.session.commit()
-
-#         category_schema = CategorySchema()
-#         category_data = category_schema.dump(new_category)
-#         return category_data, 201
+        new_category = Category(category_name=category_name)
+        db.session.add(new_category)
+        db.session.commit()
+        
+        category_schema = CategorySchema()
+        category_data = category_schema.dump(new_category)
+        return category_data, 201
     
-# class Categories(Resource):
-#     def get(self):
-#         categories = Category.query.all()
+class Categories(Resource):
+    def get(self):
+        categories = Category.query.all()
 
-#         if not categories:
-#             return {'message': 'No category exists.'}, 200
+        if not categories:
+            return {'message': 'No category exists.'}, 200
 
-#         return [
-#             {
-#                 'category_name': category.category_name,
-#                     'id': category.id
-#                 } for category in categories
-#         ], 200
+        return [
+            {
+                'category_name': category.category_name,
+                    'id': category.id
+                } for category in categories
+        ], 200
 
     
 api.add_resource(CheckSession,'/check_session')
 # api.add_resource(Signup, '/signup')
 api.add_resource(Login, '/login')
-# api.add_resource(NewPlant, '/new_plant')
-# api.add_resource(Categories, '/categories')
-# api.add_resource(NewCategory, '/new_category')
+api.add_resource(NewPlant, '/new_plant')
+api.add_resource(Categories, '/categories')
+api.add_resource(NewCategory, '/new_category')
 
 
 
