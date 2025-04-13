@@ -65,7 +65,8 @@ const PlantForm = () => {
                     return res.json()
             })
                             .then(data => {
-                                
+                                //add
+                                fetchUserData()
                                  
                                 setUserCategories(prev => {
                                     const existingCategory = prev.some(cat => cat.id === data.plant.category.id)
