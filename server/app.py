@@ -5,7 +5,7 @@ from flask_restful import Api, Resource
 from flask_cors import CORS
 from server.config import Config
 from server.extensions import db, ma  # Import extensions from extensions.py
-from datetime import datetime
+from datetime import datetime, timedelta, date
 from dotenv import load_dotenv
 from flask_migrate import Migrate
 
@@ -240,14 +240,58 @@ class Categories(Resource):
                     'id': category.id
                 } for category in categories
         ], 200
-
     
-api.add_resource(CheckSession,'/check_session')
+class CareNoteForm(Resource):
+    def post(self):
+
+        data = request.get_json()
+        care_type = data.get('care_type')
+        frequency = data.get('frequency')
+        starting_date_str = data.get('starting_date')
+        plant_id = data.get('plant_id')
+
+                
+        if not care_type or not isinstance(care_type, str):
+            return {'error': 'Care type is required and must be a string.'}, 400
+        if len(care_type) < 5 or len(care_type) > 100:
+            return {'error': 'care type must be between 5 and 100 characters.'}, 400
+        if not frequency or not isinstance(frequency, int):
+            return {'error': 'Frequency is required and must be an integer.'}
+        if frequency < 1:
+            return {'error': 'Frequency must be a positive integer.'}, 400
+        
+        try:
+            starting_date = datetime.strptime(starting_date_str, '%Y-%m-%d').date()
+        except (ValueError, TypeError):
+            return {'error': 'starting_date is required and must be a valid date (YYYY-MM-DD).'}, 400
+
+       
+        next_care_date = starting_date + timedelta(days=frequency)
+        if not plant_id:
+            return {'error': 'plant id is required.'}, 400
+        
+        new_care_note = CareNote(
+            care_type = care_type,
+            frequency = frequency,
+            starting_date = starting_date,
+            next_care_date = next_care_date,
+            plant_id = plant_id
+
+        )
+        db.session.add(new_care_note)
+        db.session.commit()
+
+        care_note_schema = CareNoteSchema()
+        care_note_data = care_note_schema.dump(new_care_note)
+        return care_note_data, 201
+    
+api.add_resource(CheckSession, '/check_session')
 # api.add_resource(Signup, '/signup')
 api.add_resource(Login, '/login')
 api.add_resource(NewPlant, '/new_plant')
 api.add_resource(Categories, '/categories')
 api.add_resource(NewCategory, '/new_category')
+api.add_resource(CareNoteForm, '/new_care_note')
 
 
 

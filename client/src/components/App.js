@@ -9,6 +9,7 @@ import Login from "./Login";
 import UserCategory from "./UserCategory";
 import PlantForm from "./PlantForm";
 import PlantDetailes from "./PlantDetailes";
+import CareNoteForm from "./CareNoteForm";
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           <Route path="/users/categories/:categoryId" element={<UserCategory/> } /> 
           <Route path="/new_plant" element={<PlantForm/> } />
           <Route path="/plant/:plantId" element={<PlantDetailes/> } />
+          <Route path="/new_care_note" element={<CareNoteForm/> } />
            
         </Routes>
       </Router>

@@ -157,11 +157,7 @@ class CategorySchema(SQLAlchemyAutoSchema):
         load_instance = True
     plants = fields.Nested('PlantSchema', many=True, exclude=('category', 'user', 'care_notes'))
     
-    # categories = fields.Method('get_categories')
-    # def get_categories(self, user):
-    #     user_categories = {plant.category for plant in user.plants}
-    #     return CategorySchema(many=True).dump(user_categories)
-
+    
 
 class CareNoteSchema(SQLAlchemyAutoSchema):
     class Meta:
@@ -178,7 +174,7 @@ class UserSchema(SQLAlchemyAutoSchema):
         load_instance = True
     
         exclude = ('password_hash',)
-    # categories = fields.List(fields.Nested(CategorySchema))
+    
     categories = fields.Method('get_categories')
 
     plants = fields.Nested('PlantSchema', many=True, exclude=('user',))  
@@ -189,4 +185,4 @@ class UserSchema(SQLAlchemyAutoSchema):
     
         category_set = {plant.category for plant in user.plants if plant.category}
         return CategorySchema(many=True).dump(list(category_set))
-    # categories = fields.Method('get_categories')
+    

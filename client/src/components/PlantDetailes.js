@@ -2,6 +2,7 @@
 import { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import AppContext from "./AppContext";
+import CareNoteForm from "./CareNoteForm";
 
 const PlantDetailes = () => {
     const { state } = useLocation()
@@ -19,16 +20,22 @@ const PlantDetailes = () => {
             <h4>🌿Plant: {plant.plant_name}</h4>
                         {plant.care_notes && plant.care_notes.length ? (
                             plant.care_notes.map(note => (
-                                <ol key={note.id}>
+                                <ul key={note.id}>
                                     <li>Care Type: {note.care_type}</li>
                                     <li>Frequency: {note.frequency}</li>
                                     <li>Started Date: {note.starting_date}</li>
                                     <li>Up Coming Date: {note.next_care_date}</li>
-                            </ol>
+                                    
+                                </ul>
+                                
                         ))
                         ): (
                             <p>🌿</p>
-                        ) } 
+            )} 
+            <button>Delete: {plant.plant_name}</button>
+            <div>
+                <CareNoteForm plantId={plant.id}/>
+            </div>
         </div>
     )
 }

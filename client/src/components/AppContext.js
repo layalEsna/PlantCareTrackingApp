@@ -12,7 +12,7 @@ export const AppProvider = ({ children }) => {
     const [plants, setPlants] = useState([])
     const [userCategories, setUserCategories] = useState([])
     const [allCategories, setAllCategories] = useState([])
-
+    const [careNotes, setCareNotes] = useState([])
 
     function fetchUserData() {
         fetch('/check_session', {
@@ -43,8 +43,11 @@ export const AppProvider = ({ children }) => {
                   
                 setUserCategories(enhancedCategories)
                 setPlants(data.plants)
+                // const allCareNotes = data.plants.flatMap(plant => plant.care_notes || [])
+                
+                // setCareNotes(allCareNotes)
             })
-            .catch(e => console.error(e))
+            .catch(e => console.error(e)) 
     }
     useEffect(() => {
         fetchUserData()
@@ -74,7 +77,9 @@ export const AppProvider = ({ children }) => {
             setPlants,
             setUserCategories,
             allCategories,
-            setAllCategories
+            setAllCategories,
+            careNotes,
+            setCareNotes
 
         }}>
             {children}
