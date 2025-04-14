@@ -7,13 +7,13 @@ const NewCategory = () => {
     const {setAllCategories, allCategories} = useContext(AppContext)
     
     const formik = useFormik({
-        // Category name is requierd.
+        
         initialValues: {
             category_name: ''
         },
         validationSchema: Yup.object({
             category_name: Yup.string()
-                .required('Category name is requierd.')
+                .required('Category name is required.')
                 .min(5, 'Category name must be between 5 and 100 characters.')
 
                 .max(100, 'Category name must be between 5 and 100 characters.')
@@ -43,9 +43,7 @@ const NewCategory = () => {
                         }
                         formik.resetForm({ values: { category_name: '' }, touched: {}, errors: {} });
 
-                    // formik.setValues({ category_name: '' })
-                    // resetForm({ values: { category_name: '' }, touched: {}, errors: {} }); // ✅ clear value + touched + errors
-
+                    
                 
             })
             .catch(e => console.error(e))
