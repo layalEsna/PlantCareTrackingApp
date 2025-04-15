@@ -4,7 +4,7 @@ import { useContext } from "react";
 import AppContext from "./AppContext";
 
 const CareNoteForm = ({plantId}) => {
-    const {careNotes, setCareNotes} = useContext(AppContext)
+    const {careNotes, setCareNotes, setPlants} = useContext(AppContext)
 
     const formik = useFormik({
         initialValues: {
@@ -55,12 +55,19 @@ const CareNoteForm = ({plantId}) => {
                     return res.json()
                 })
                 .then(data => {
-                //     const selectedPlantId = plantId
-                //     setCareNotes(prev => {
-                //         const selectedPlantCareNotes = data.plants
-                //         .find(plant => plant.id === selectedPlantId)?.care_notes || []
-                //         return [...prev, ...selectedPlantCareNotes]
-                //   })
+                //     setPlants(prevaPlants => 
+                //         prevaPlants.map(plant => {
+                //             if (plant.id === data.plant_id) {
+                //                 return {
+                //                     ...plant, 
+                //                     careNotes: [...(plant.careNotes || []), data]
+                //                 }
+                //             }
+                //             return plant
+                //         })
+                //  )
+
+                
                     setCareNotes(prev=>[...prev, data])
                 })
                 .catch(e => console.error(e))

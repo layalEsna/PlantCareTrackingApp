@@ -20,6 +20,14 @@ class User(db.Model):
     plants = db.relationship('Plant', back_populates='user', lazy='joined')
     # categories = db.relationship('Category', secondary='plants', back_populates='users')
     # care_notes = db.relationship('CareNote', secondary='plants', back_populates='users')
+
+    categories = db.relationship(
+        "Category",
+        secondary="plants",
+        primaryjoin="User.id == Plant.user_id",
+        secondaryjoin="Plant.category_id == Category.id",
+        viewonly=True
+    )
     @validates('username')
     def validate_username(self, key, username):
         if not username or not isinstance(username, str):
@@ -27,6 +35,10 @@ class User(db.Model):
         if len(username) < 5 or len(username) > 100:
             raise ValueError('Username must be between 5 and 100 characters inclusive.')
         return username
+    # @property
+    # def categories(self):
+    #     return list({plant.category for plant in self.plants})
+
 
     @property
     def password(self):
@@ -107,7 +119,8 @@ class CareNote(db.Model):
 
     plant_id = db.Column(db.Integer, db.ForeignKey('plants.id'), nullable=False)
     plant = db.relationship('Plant', back_populates='care_notes')
-    
+    # plants = db.relationship("Plant", backref="category")
+
     
     @validates('care_type')
     def validate_care_type(self, key, care_type):
@@ -145,7 +158,7 @@ class PlantSchema(SQLAlchemyAutoSchema):
         load_instance = True
     user = fields.Nested('UserSchema', exclude=('plants',))  
     category = fields.Nested('CategorySchema', exclude=('plants',))  
-    # category_id = fields.Int()
+   
     care_notes = fields.Nested('CareNoteSchema', many=True, exclude=('plant',))
     created_at = fields.Date(format='%Y-%m-%d')
     category_id = auto_field()
@@ -174,15 +187,15 @@ class UserSchema(SQLAlchemyAutoSchema):
         load_instance = True
     
         exclude = ('password_hash',)
-    
-    categories = fields.Method('get_categories')
+    categories = fields.Nested('CategorySchema', many=True, exclude=('plants',))
+    # categories = fields.Method('get_categories')
 
     plants = fields.Nested('PlantSchema', many=True, exclude=('user',))  
 
-    def get_categories(self, user):
-        if not user.plants:
-            return []
+    # def get_categories(self, user):
+    #     if not user.plants:
+    #         return []
     
-        category_set = {plant.category for plant in user.plants if plant.category}
-        return CategorySchema(many=True).dump(list(category_set))
+    #     category_set = {plant.category for plant in user.plants if plant.category}
+    #     return CategorySchema(many=True).dump(list(category_set))
     

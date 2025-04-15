@@ -18,6 +18,7 @@ const PlantDetailes = () => {
         <div>
             <p>Care Notes:</p>
             <h4>🌿Plant: {plant.plant_name}</h4>
+            <button>Delete: {plant.plant_name}</button>
                         {plant.care_notes && plant.care_notes.length ? (
                             plant.care_notes.map(note => (
                                 <ul key={note.id}>
@@ -32,7 +33,7 @@ const PlantDetailes = () => {
                         ): (
                             <p>🌿</p>
             )} 
-            <button>Delete: {plant.plant_name}</button>
+            {/* <button>Delete: {plant.plant_name}</button> */}
             <div>
                 <CareNoteForm plantId={plant.id}/>
             </div>
