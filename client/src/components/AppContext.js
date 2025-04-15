@@ -62,16 +62,14 @@ export const AppProvider = ({ children }) => {
             .then(data => {
                 console.log('🟢', data)
                 setUser(data)
-                
+
                 setUserCategories(data.categories || [])
                 setPlants(data.plants || [])
-                
-                // setCareNotes(data.plants.map(plant=> plant.careNotes || []))
-                setCareNotes(
-                    data.plants.map(plant => plant.careNotes || []).flat()
-                    
-                  )
-                  
+                const allCareNotes = data.categories
+                    ?.map(category => category.plants || [])
+                    .map(plant => plant.care_notes || [])
+                setCareNotes(allCareNotes)
+
 
             })
             .catch(e => console.log(e))

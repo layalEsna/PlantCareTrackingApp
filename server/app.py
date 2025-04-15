@@ -44,24 +44,10 @@ def index():
 def logout():
     session.clear() 
     return redirect(url_for('index')) 
-# class CheckSession(Resource):
-#     def get(self):
-#         user_id = session.get('user_id')
-#         if not user_id:
-#             return {'error': 'Unauthorized.'}, 401
-#         user = User.query.get(user_id)
-#         if not user:
-#             return {'error': 'User not found.'}, 404
-        
-#         user_plants = Plant.query.filter(Plant.user_id == user.id).all()
-#         categories = {plant.category for plant in user_plants if plant.category}
-#         user_schema = UserSchema()
-        
-#         result_user = user_schema.dump(user)
-        
-        
-#         return result_user, 200
-    
+
+
+
+
 class CheckSession(Resource):
     def get(self):
         user_id = session.get('user_id')
@@ -72,126 +58,56 @@ class CheckSession(Resource):
         if not user:
             return {'error': 'User not found.'}, 404
 
-        # Get only this user's plants
-       
-        user_plants = Plant.query.filter_by(user_id=user.id).all()
-        # 
         
-        # Group plants by category
-        category_dict = {}
-        for plant in user_plants:
-            if plant.category:
-                cat_id = plant.category.id
-                if cat_id not in category_dict:
-                    category_dict[cat_id] = {
-                        "id": plant.category.id,
-                        "category_name": plant.category.category_name,
-                        "plants": []
-                    }
-                category_dict[cat_id]["plants"].append({
-                    "id": plant.id,
-                    "plant_name": plant.plant_name,
-                    "image": plant.image,
-                    "created_at": plant.created_at.strftime("%Y-%m-%d"),
-                    "user_id": plant.user_id,
-                    "category_id": plant.category_id
-                })
-
-        # Convert categories to a list
-        user_categories = list(category_dict.values())
-
-        # Serialize user (exclude categories to avoid duplication)
-        user_schema = UserSchema(exclude=["categories"])
-        result_user = user_schema.dump(user)
-
-        # Reorder keys so 'categories' comes first
-        response_data = {
-            "categories": user_categories,
-            **result_user  # This spreads the rest (id, username, plants) after
+        user_info = {
+            'id': user.id,
+            'username': user.username
         }
 
-        return response_data, 200
+       
+        categories_data = []
 
+        for category in user.categories:
+            category_data = {
+                'id': category.id,
+                'category_name': category.category_name,
+                'plants': []
+            }
 
-# class CheckSession(Resource):
-#     def get(self):
-#         user_id = session.get('user_id')
-#         if not user_id:
-#             return {'error': 'Unauthorized.'}, 401
-
-#         user = User.query.get(user_id)
-#         if not user:
-#             return {'error': 'User not found.'}, 404
-
-#         # Get only this user's plants
-#         user_plants = Plant.query.filter_by(user_id=user.id).all()
-
-#         # Group plants by category
-#         category_dict = {}
-#         for plant in user_plants:
-#             if plant.category:
-#                 if plant.category.id not in category_dict:
-#                     category_dict[plant.category.id] = {
-#                         "id": plant.category.id,
-#                         "category_name": plant.category.category_name,
-#                         "plants": []
-#                     }
-#                 category_dict[plant.category.id]["plants"].append({
-#                     "id": plant.id,
-#                     "plant_name": plant.plant_name,
-#                     "image": plant.image,
-#                     "created_at": plant.created_at.strftime("%Y-%m-%d"),
-#                     "user_id": plant.user_id,
-#                     "category_id": plant.category_id
-#                 })
-
-#         # Convert to list
-#         user_categories = list(category_dict.values())
-
-#         # Serialize user (excluding full categories)
-#         user_schema = UserSchema(exclude=["categories"])
-#         result_user = user_schema.dump(user)
-
-#         # Inject filtered categories into the response
-#         result_user["categories"] = user_categories
-
-#         return result_user, 200
-
-# class Signup(Resource):
-    
-#     def post(self):
-
-#         try:
-#             data = request.get_json()
-#             username = data.get('username')
-           
-#             password = data.get('password')
-#             confirm_password = data.get('confirm_password')
-
-#             if not all([username, password, confirm_password]):
-#                 return make_response(jsonify({'error': 'All the fields are required.'}), 400)
-#             if password != confirm_password:
-#                 return make_response(jsonify({'error': 'Password not match.'}), 400)
-#             if User.query.filter(User.username==username).first():
-#                 return make_response(jsonify({'error': 'unique constraint'}), 400)
+            plants = Plant.query.filter(
+                Plant.category_id == category.id, Plant.user_id == user_id).all()
             
-            
-#             new_user = User(
-#                 username = username,
-#                 password = password,
-                
-#             )
 
-#             db.session.add(new_user)
-#             db.session.commit()            
-#             session['user_id'] = new_user.id
-#             session.permanent = True 
+            for plant in plants:
+                plant_data = {
+                    'id': plant.id,
+                    'plant_name': plant.plant_name,
+                    'image': plant.image,
+                    'created_at': plant.created_at.strftime('%Y-%m-%d'),
+                    'user_id': plant.user_id,
+                    'category_id': plant.category_id,
+                    'care_notes': []
+                }
 
-#             return make_response(jsonify({'id': new_user.id, 'username': new_user.username}), 201)
+                for care_note in plant.care_notes:
+                    care_note_data = {
+                        'id': care_note.id,
+                        'care_type': care_note.care_type,
+                        'frequency': care_note.frequency,
+                        'starting_date': care_note.starting_date.strftime('%Y-%m-%d'),
+                        'next_care_date': care_note.next_care_date.strftime('%Y-%m-%d')
+                    }
+                    plant_data['care_notes'].append(care_note_data)
 
-#         except Exception as e:
-#             return make_response(jsonify({'error': f'Internal error: {e}'}), 500)
+                category_data['plants'].append(plant_data)
 
+            categories_data.append(category_data)
+
+        return {
+            **user_info,
+            'categories': categories_data
+        }, 200
+  
 
 class Login(Resource):
     def post(self):

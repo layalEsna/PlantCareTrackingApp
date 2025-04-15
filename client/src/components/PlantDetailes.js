@@ -7,13 +7,22 @@ import CareNoteForm from "./CareNoteForm";
 const PlantDetailes = () => {
     const { state } = useLocation()
     const { user } = useContext(AppContext)
-    if (!user || !user.plants) {
+    if (!user || !user.categories) {
         return <p>Loading user data...</p>
     }
     const plantId = state?.plantId
 
-    const plant = user.plants.find(plant => plant.id === plantId)
-    
+    // const plant = user.categories.find(cat => plant.id === plantId)
+    const category = user.categories.find(cat =>
+        cat.plants.some(plant => plant.id === plantId)
+    )
+    if (!category) {
+        return <p>Category or Plant not found...</p>
+    }
+
+
+    const plant = category.plants.find(plant => plant.id === plantId);
+
     return (
         <div>
             <p>Care Notes:</p>
@@ -33,7 +42,7 @@ const PlantDetailes = () => {
                         ): (
                             <p>🌿</p>
             )} 
-            {/* <button>Delete: {plant.plant_name}</button> */}
+            
             <div>
                 <CareNoteForm plantId={plant.id}/>
             </div>

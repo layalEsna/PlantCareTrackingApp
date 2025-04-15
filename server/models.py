@@ -176,6 +176,7 @@ class CareNoteSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = CareNote
         load_instance = True
+    plant_id = auto_field()
     plant = fields.Nested('PlantSchema', exclude=('user', 'care_notes',))
     starting_date = fields.Date(format='%Y-%m-%d')
     next_care_date = fields.Date(format='%Y-%m-%d')
@@ -188,14 +189,8 @@ class UserSchema(SQLAlchemyAutoSchema):
     
         exclude = ('password_hash',)
     categories = fields.Nested('CategorySchema', many=True, exclude=('plants',))
-    # categories = fields.Method('get_categories')
+    
 
     plants = fields.Nested('PlantSchema', many=True, exclude=('user',))  
 
-    # def get_categories(self, user):
-    #     if not user.plants:
-    #         return []
-    
-    #     category_set = {plant.category for plant in user.plants if plant.category}
-    #     return CategorySchema(many=True).dump(list(category_set))
-    
+     
