@@ -46,7 +46,7 @@ def logout():
     return redirect(url_for('index')) 
 
 
-
+        
 
 class CheckSession(Resource):
     def get(self):
@@ -57,54 +57,9 @@ class CheckSession(Resource):
         user = User.query.get(user_id)
         if not user:
             return {'error': 'User not found.'}, 404
-        
-        user_info = {
-            'id': user.id,
-            'username': user.username,
-        }   
 
-        categories_data = []     
-
-        for category in user.categories:
-            category_data = {
-                'id': category.id,
-                'category_name': category.category_name,
-                'plants': []
-            }   
-
-            plants = Plant.query.filter(Plant.user_id == user_id, Plant.category_id == category.id).all()   
-            for plant in plants:
-                plant_data = {
-                    'id': plant.id,
-                    'plant_name': plant.plant_name,
-                    'image': plant.image,
-                    'created_at': plant.created_at.strftime('%Y-%m-%d'),
-                    'user_id': plant.user_id,
-                    'category_id': plant.category_id,
-                    'care_notes': []
-                }   
-
-                for care_note in plant.care_notes:
-                    care_note_data = {
-                        'id': care_note.id,
-                        'care_type': care_note.care_type,
-                        'frequency': care_note.frequency,
-                        'starting_date': care_note.starting_date.strftime('%y-%m-%d'),
-
-                        'next_care_date': care_note.next_care_date.strftime('%Y-%m-%d'),
-                        'plant_id': care_note.plant_id,
-                    }
-
-                    plant_data['care_notes'].append(care_note_data)
-                category_data['plants'].append(plant_data)
-            categories_data.append(category_data)
-        return{
-            **user_info,
-            'categories': categories_data
-        }
-        
-         
-
+        user_data = UserSchema().dump(user)
+        return user_data, 200
 
 
 class Login(Resource):
@@ -327,4 +282,73 @@ if __name__ == '__main__':
        
    #python -m server.app    
    # http://localhost:5555/check_session
- # 
+#  # 
+#  {
+#     "id": 4,
+#     "username": "Arshia",
+#     "categories": [
+#         {
+#             "id": 1,
+#             "category_name": "Succulents",
+#             "plants": [
+#                 {
+#                     "id": 4,
+#                     "plant_name": "Cactus",
+#                     "image": "image4.jpg",
+#                     "created_at": "2023-06-02",
+#                     "user_id": 4,
+#                     "category_id": 1,
+#                     "care_notes": [
+#                         {
+#                             "id": 4,
+#                             "care_type": "Pruning",
+#                             "frequency": 10,
+#                             "starting_date": "23-03-15",
+#                             "next_care_date": "2023-03-15",
+#                             "plant_id": 4
+#                         }
+#                     ]
+#                 }
+#             ]
+#         },
+#         {
+#             "id": 2,
+#             "category_name": "Ferns",
+#             "plants": [
+#                 {
+#                     "id": 19,
+#                     "plant_name": "arshia 1",
+#                     "image": "",
+#                     "created_at": "2025-04-13",
+#                     "user_id": 4,
+#                     "category_id": 2,
+#                     "care_notes": []
+#                 }
+#             ]
+#         },
+#         {
+#             "id": 10,
+#             "category_name": "cat 9",
+#             "plants": [
+#                 {
+#                     "id": 20,
+#                     "plant_name": "par 7",
+#                     "image": "",
+#                     "created_at": "2025-04-13",
+#                     "user_id": 4,
+#                     "category_id": 10,
+#                     "care_notes": []
+#                 },
+#                 {
+#                     "id": 21,
+#                     "plant_name": "par 8",
+#                     "image": "",
+#                     "created_at": "2025-04-13",
+#                     "user_id": 4,
+#                     "category_id": 10,
+#                     "care_notes": []
+#                 }
+#             ]
+#         }
+#     ]
+# }

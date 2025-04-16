@@ -1,13 +1,15 @@
 
 # models.py
 
-from server.extensions import db, bcrypt  # Use db from extensions.py
+from server.extensions import db, bcrypt,ma  # Use db from extensions.py
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 from sqlalchemy.orm import validates, relationship
 from werkzeug.security import generate_password_hash, check_password_hash
-from marshmallow import fields
+# from marshmallow import fields
+from flask_marshmallow import Marshmallow
 from datetime import date
 import re
+
 
 
 class User(db.Model):
@@ -150,47 +152,83 @@ class CareNote(db.Model):
             raise ValueError('next_care_date is required and must be a date type.')
         return next_care_date
         
-        
 
-class PlantSchema(SQLAlchemyAutoSchema):
+ 
+class PlantSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Plant
         load_instance = True
-    user = fields.Nested('UserSchema', exclude=('plants',))  
-    category = fields.Nested('CategorySchema', exclude=('plants',))  
-   
-    care_notes = fields.Nested('CareNoteSchema', many=True, exclude=('plant',))
-    created_at = fields.Date(format='%Y-%m-%d')
-    category_id = auto_field()
-    user_id = auto_field()
+    user = ma.Nested('UserSchema', exclude=('plants',))  
+    category = ma.Nested('CategorySchema', exclude=('plants',))  
+    care_notes = ma.Nested('CareNoteSchema', many=True, exclude=('plant',))
+    created_at = ma.Date(format='%Y-%m-%d')
+    category_id = ma.auto_field()
+    user_id = ma.auto_field()
 
-class CategorySchema(SQLAlchemyAutoSchema):
+class CategorySchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Category
         load_instance = True
-    plants = fields.Nested('PlantSchema', many=True, exclude=('category', 'user', 'care_notes'))
-    
-    
+    plants = ma.Nested('PlantSchema', many=True, exclude=('category', 'user', 'care_notes'))
 
-class CareNoteSchema(SQLAlchemyAutoSchema):
+class CareNoteSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = CareNote
         load_instance = True
-    plant_id = auto_field()
-    plant = fields.Nested('PlantSchema', exclude=('user', 'care_notes',))
-    starting_date = fields.Date(format='%Y-%m-%d')
-    next_care_date = fields.Date(format='%Y-%m-%d')
+    plant_id = ma.auto_field()
+    plant = ma.Nested('PlantSchema', exclude=('user', 'care_notes',))
+    starting_date = ma.Date(format='%Y-%m-%d')
+    next_care_date = ma.Date(format='%Y-%m-%d')
 
-class UserSchema(SQLAlchemyAutoSchema):
+class UserSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = User
         include_relationships = True
         load_instance = True
+    exclude = ('password_hash',)
+    categories = ma.Nested('CategorySchema', many=True, exclude=('plants',))
+    plants = ma.Nested('PlantSchema', many=True, exclude=('user',))
+
+
+# class PlantSchema(SQLAlchemyAutoSchema):
+#     class Meta:
+#         model = Plant
+#         load_instance = True
+#     user = fields.Nested('UserSchema', exclude=('plants',))  
+#     category = fields.Nested('CategorySchema', exclude=('plants',))  
+   
+#     care_notes = fields.Nested('CareNoteSchema', many=True, exclude=('plant',))
+#     created_at = fields.Date(format='%Y-%m-%d')
+#     category_id = auto_field()
+#     user_id = auto_field()
+
+# class CategorySchema(SQLAlchemyAutoSchema):
+#     class Meta:
+#         model = Category
+#         load_instance = True
+#     plants = fields.Nested('PlantSchema', many=True, exclude=('category', 'user', 'care_notes'))
     
-        exclude = ('password_hash',)
-    categories = fields.Nested('CategorySchema', many=True, exclude=('plants',))
     
 
-    plants = fields.Nested('PlantSchema', many=True, exclude=('user',))  
+# class CareNoteSchema(SQLAlchemyAutoSchema):
+#     class Meta:
+#         model = CareNote
+#         load_instance = True
+#     plant_id = auto_field()
+#     plant = fields.Nested('PlantSchema', exclude=('user', 'care_notes',))
+#     starting_date = fields.Date(format='%Y-%m-%d')
+#     next_care_date = fields.Date(format='%Y-%m-%d')
+
+# class UserSchema(SQLAlchemyAutoSchema):
+#     class Meta:
+#         model = User
+#         include_relationships = True
+#         load_instance = True
+    
+#         exclude = ('password_hash',)
+#     categories = fields.Nested('CategorySchema', many=True, exclude=('plants',))
+    
+
+#     plants = fields.Nested('PlantSchema', many=True, exclude=('user',))  
 
      

@@ -9,7 +9,7 @@ import NewCategory from "./NewCategory";
 // console.log(first)
 const PlantForm = () => {
     const navigate = useNavigate()
-    const {user, allCategories, setUserCategories, setPlants, fetchUserData} = useContext(AppContext)
+    const {user, allCategories, setUserCategories, setPlants, fetchUserData, setCareNotes} = useContext(AppContext)
 
     const formik = useFormik({
         initialValues: {
@@ -58,16 +58,22 @@ const PlantForm = () => {
                             },
                             credentials: 'include',
                 body: JSON.stringify(newPlant)
-            })
+                        })
+                            
+                            
+                            
                 .then(res => {
                     if (!res.ok) {
                     throw new Error(res.error  || 'failed to fetch data.')
                     }
                     return res.json()
-            })
+                })
+         
+                            
+                            
+                            
                             .then(data => {
-                                //add
-                                fetchUserData()
+                                // fetchUserData()
                                  
                                 setUserCategories(prev => {
                                     const existingCategory = prev.some(cat => cat.id === data.plant.category.id)
@@ -77,6 +83,9 @@ const PlantForm = () => {
                     setPlants(prev => [
                         ...prev, data.plant
                     ])
+                                
+                                
+                                
                     formik.resetForm({
                         values: {
                           plant_name: '',

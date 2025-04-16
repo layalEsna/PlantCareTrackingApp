@@ -24,6 +24,7 @@ function App() {
           <Route path="/new_plant" element={<PlantForm/> } />
           <Route path="/plant/:plantId" element={<PlantDetailes/> } />
           <Route path="/new_care_note" element={<CareNoteForm/> } />
+          {/* <Route path="/new_care_note" element={<CareNoteForm/> } /> */}
            
         </Routes>
       </Router>
