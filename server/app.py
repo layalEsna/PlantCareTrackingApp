@@ -57,27 +57,22 @@ class CheckSession(Resource):
         user = User.query.get(user_id)
         if not user:
             return {'error': 'User not found.'}, 404
-
         
         user_info = {
             'id': user.id,
-            'username': user.username
-        }
+            'username': user.username,
+        }   
 
-       
-        categories_data = []
+        categories_data = []     
 
         for category in user.categories:
             category_data = {
                 'id': category.id,
                 'category_name': category.category_name,
                 'plants': []
-            }
+            }   
 
-            plants = Plant.query.filter(
-                Plant.category_id == category.id, Plant.user_id == user_id).all()
-            
-
+            plants = Plant.query.filter(Plant.user_id == user_id, Plant.category_id == category.id).all()   
             for plant in plants:
                 plant_data = {
                     'id': plant.id,
@@ -87,27 +82,30 @@ class CheckSession(Resource):
                     'user_id': plant.user_id,
                     'category_id': plant.category_id,
                     'care_notes': []
-                }
+                }   
 
                 for care_note in plant.care_notes:
                     care_note_data = {
                         'id': care_note.id,
                         'care_type': care_note.care_type,
                         'frequency': care_note.frequency,
-                        'starting_date': care_note.starting_date.strftime('%Y-%m-%d'),
-                        'next_care_date': care_note.next_care_date.strftime('%Y-%m-%d')
+                        'starting_date': care_note.starting_date.strftime('%y-%m-%d'),
+
+                        'next_care_date': care_note.next_care_date.strftime('%Y-%m-%d'),
+                        'plant_id': care_note.plant_id,
                     }
+
                     plant_data['care_notes'].append(care_note_data)
-
                 category_data['plants'].append(plant_data)
-
             categories_data.append(category_data)
-
-        return {
+        return{
             **user_info,
             'categories': categories_data
-        }, 200
-  
+        }
+        
+         
+
+
 
 class Login(Resource):
     def post(self):
@@ -296,6 +294,21 @@ class CareNoteForm(Resource):
         care_note_data = care_note_schema.dump(new_care_note)
         return care_note_data, 201
     
+class DeletePlant(Resource):
+    def delete(self, plant_id):
+        user_id = session.get('user_id')
+        if not user_id:
+            return {'error': 'Unauthorized'}, 401
+        plant = Plant.query.filter(Plant.id == plant_id, Plant.user_id == user_id).first()
+        if not plant:
+            return {'error': 'Plant not found or you do not have permission to delete it.'}, 404
+
+        db.session.delete(plant)
+        db.session.commit()
+        return {'message': 'Plant deleted successfully.'}, 200
+
+
+    
 api.add_resource(CheckSession, '/check_session')
 # api.add_resource(Signup, '/signup')
 api.add_resource(Login, '/login')
@@ -303,6 +316,7 @@ api.add_resource(NewPlant, '/new_plant')
 api.add_resource(Categories, '/categories')
 api.add_resource(NewCategory, '/new_category')
 api.add_resource(CareNoteForm, '/new_care_note')
+api.add_resource(DeletePlant, '/plant/<int:plant_id>')
 
 
 
