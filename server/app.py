@@ -31,10 +31,7 @@ from server.models import User, Plant, Category, CareNote, UserSchema, CategoryS
 api = Api(app)
 CORS(app, supports_credentials=True)
 
-# Routes and other app setup...
 
-
-# Define routes and other logic...
 
 @app.route('/')
 def index():
