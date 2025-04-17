@@ -14,7 +14,7 @@ export const AppProvider = ({ children }) => {
     const [allCategories, setAllCategories] = useState([])
     const [careNotes, setCareNotes] = useState([])
 
-    
+ 
 
 
     function fetchUserData() {

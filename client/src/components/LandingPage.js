@@ -9,7 +9,8 @@ import PlantForm from "./PlantForm";
 const LandingPage = () => {
 
     const { user, userCategories } = useContext(AppContext)
-//    console.log('🟢user categories', userCategories)
+    //    console.log('🟢user categories', userCategories)
+    // 
 
     if (!user || !user.username) {
         return <p>User not found...</p>

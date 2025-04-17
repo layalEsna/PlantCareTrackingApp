@@ -25,11 +25,7 @@ const CareNoteForm = ({plantId}) => {
             starting_date: Yup.date()
                 .required('starting_date is required')
                 .typeError('Starting date must be a valid date.'),
-            // plant_id: Yup.number()
-            //     .typeError('plant_id must be a number')
-            //     .required('plant_id is required')
-            //     .positive('plant_id must be a positive number')
-
+            
 
         }),
         onSubmit: (values) => {
@@ -37,7 +33,7 @@ const CareNoteForm = ({plantId}) => {
             const payload = {
                 ...values,
                 frequency: parseInt(values.frequency, 10),
-                // plant_id: parseInt(values.plant_id, 10)
+                
             }
 
             fetch('/new_care_note', {

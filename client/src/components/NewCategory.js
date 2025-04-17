@@ -2,7 +2,7 @@ import { useContext } from "react";
 import AppContext from "./AppContext";
 import { useFormik } from "formik";
 import * as Yup from 'yup'
-
+// 
 const NewCategory = () => {
     const {setAllCategories, allCategories} = useContext(AppContext)
     

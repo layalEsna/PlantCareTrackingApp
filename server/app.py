@@ -8,6 +8,7 @@ from server.extensions import db, ma  # Import extensions from extensions.py
 from datetime import datetime, timedelta, date
 from dotenv import load_dotenv
 from flask_migrate import Migrate
+from marshmallow import ValidationError
 
 load_dotenv()
 import os
@@ -65,35 +66,22 @@ class Login(Resource):
         username = data.get('username')
         password = data.get('password')
 
-        print(f"Login attempt: username='{username}', password='{password}'")
-
         if not all([username, password]):
-            print("Error: Missing username or password")
+           
             return {'error': 'All fields are required'}, 400
 
         user = User.query.filter(User.username == username).first()
 
-        if user:
-            print(f"User found: username='{user.username}', password_hash='{user.password_hash}'")
-        else:
-            print("User not found in database.")
-
         if not user or not user.check_password(password):
-            print("Error: Incorrect username or password")
+           
             return {'error': 'Username or password not found'}, 404
-
-        print("Login successful")
 
         session['user_id'] = user.id
         session.permanent = True
-        return {
-            'username': user.username,
-            'id': user.id
-        }, 200   
 
-
-
-
+        user_data = UserSchema().dump(user)
+        return user_data, 200
+        
 class NewPlant(Resource):
     def post(self):
         user_id = session.get('user_id') 
@@ -143,20 +131,12 @@ class NewPlant(Resource):
         db.session.add(new_plant)
         db.session.commit()
 
-        return {
-                'plant': {
-                    'id': new_plant.id,
-                    'plant_name': new_plant.plant_name,
-                    'image': new_plant.image,
-                    'created_at': new_plant.created_at.strftime("%Y-%m-%d"),
-                    'user_id': new_plant.user_id,
-                    'category': {
-                        'id': category.id,
-                        'category_name': category.category_name
-                    }
-                }
-            }, 201  
+        plant_schema = PlantSchema()
+        result = plant_schema.dump(new_plant)
+        print(result)
+        return {'plant': result}, 201
 
+         
 
 class NewCategory(Resource):
     def post(self):
@@ -194,14 +174,11 @@ class Categories(Resource):
 
         if not categories:
             return {'message': 'No category exists.'}, 200
+        
+        category_data = CategorySchema(many=True).dump(categories)
+        return category_data, 200
 
-        return [
-            {
-                'category_name': category.category_name,
-                    'id': category.id
-                } for category in categories
-        ], 200
-    
+        
 class CareNoteForm(Resource):
     def post(self):
 
@@ -279,73 +256,3 @@ if __name__ == '__main__':
        
    #python -m server.app    
    # http://localhost:5555/check_session
-#  # 
-#  {
-#     "id": 4,
-#     "username": "Arshia",
-#     "categories": [
-#         {
-#             "id": 1,
-#             "category_name": "Succulents",
-#             "plants": [
-#                 {
-#                     "id": 4,
-#                     "plant_name": "Cactus",
-#                     "image": "image4.jpg",
-#                     "created_at": "2023-06-02",
-#                     "user_id": 4,
-#                     "category_id": 1,
-#                     "care_notes": [
-#                         {
-#                             "id": 4,
-#                             "care_type": "Pruning",
-#                             "frequency": 10,
-#                             "starting_date": "23-03-15",
-#                             "next_care_date": "2023-03-15",
-#                             "plant_id": 4
-#                         }
-#                     ]
-#                 }
-#             ]
-#         },
-#         {
-#             "id": 2,
-#             "category_name": "Ferns",
-#             "plants": [
-#                 {
-#                     "id": 19,
-#                     "plant_name": "arshia 1",
-#                     "image": "",
-#                     "created_at": "2025-04-13",
-#                     "user_id": 4,
-#                     "category_id": 2,
-#                     "care_notes": []
-#                 }
-#             ]
-#         },
-#         {
-#             "id": 10,
-#             "category_name": "cat 9",
-#             "plants": [
-#                 {
-#                     "id": 20,
-#                     "plant_name": "par 7",
-#                     "image": "",
-#                     "created_at": "2025-04-13",
-#                     "user_id": 4,
-#                     "category_id": 10,
-#                     "care_notes": []
-#                 },
-#                 {
-#                     "id": 21,
-#                     "plant_name": "par 8",
-#                     "image": "",
-#                     "created_at": "2025-04-13",
-#                     "user_id": 4,
-#                     "category_id": 10,
-#                     "care_notes": []
-#                 }
-#             ]
-#         }
-#     ]
-# }

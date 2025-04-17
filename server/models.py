@@ -158,12 +158,14 @@ class PlantSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Plant
         load_instance = True
+        # exclude = ('user_id',)
     user = ma.Nested('UserSchema', exclude=('plants',))  
-    category = ma.Nested('CategorySchema', exclude=('plants',))  
+      
     care_notes = ma.Nested('CareNoteSchema', many=True, exclude=('plant',))
     created_at = ma.Date(format='%Y-%m-%d')
     category_id = ma.auto_field()
     user_id = ma.auto_field()
+    category = ma.Nested('CategorySchema', only=('id', 'category_name'))
 
 class CategorySchema(ma.SQLAlchemyAutoSchema):
     class Meta:
@@ -190,45 +192,3 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     plants = ma.Nested('PlantSchema', many=True, exclude=('user',))
 
 
-# class PlantSchema(SQLAlchemyAutoSchema):
-#     class Meta:
-#         model = Plant
-#         load_instance = True
-#     user = fields.Nested('UserSchema', exclude=('plants',))  
-#     category = fields.Nested('CategorySchema', exclude=('plants',))  
-   
-#     care_notes = fields.Nested('CareNoteSchema', many=True, exclude=('plant',))
-#     created_at = fields.Date(format='%Y-%m-%d')
-#     category_id = auto_field()
-#     user_id = auto_field()
-
-# class CategorySchema(SQLAlchemyAutoSchema):
-#     class Meta:
-#         model = Category
-#         load_instance = True
-#     plants = fields.Nested('PlantSchema', many=True, exclude=('category', 'user', 'care_notes'))
-    
-    
-
-# class CareNoteSchema(SQLAlchemyAutoSchema):
-#     class Meta:
-#         model = CareNote
-#         load_instance = True
-#     plant_id = auto_field()
-#     plant = fields.Nested('PlantSchema', exclude=('user', 'care_notes',))
-#     starting_date = fields.Date(format='%Y-%m-%d')
-#     next_care_date = fields.Date(format='%Y-%m-%d')
-
-# class UserSchema(SQLAlchemyAutoSchema):
-#     class Meta:
-#         model = User
-#         include_relationships = True
-#         load_instance = True
-    
-#         exclude = ('password_hash',)
-#     categories = fields.Nested('CategorySchema', many=True, exclude=('plants',))
-    
-
-#     plants = fields.Nested('PlantSchema', many=True, exclude=('user',))  
-
-     

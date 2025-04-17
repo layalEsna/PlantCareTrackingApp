@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom"
 import AppContext from "./AppContext"
 import CareNoteForm from "./CareNoteForm"
 import { useNavigate } from "react-router-dom"
-
+//plant.category
 const PlantDetailes = () => {
     const navigate = useNavigate()
     const { state } = useLocation()

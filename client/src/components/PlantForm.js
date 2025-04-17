@@ -1,4 +1,5 @@
 
+
 import { useContext } from "react";
 import AppContext from "./AppContext";
 import { useFormik } from "formik";
@@ -18,7 +19,7 @@ const PlantForm = () => {
             created_at: '',
             user_id: '',
             category_id: '',
-            new_cat: ''
+            // new_cat: ''
         },
         validationSchema: Yup.object({
             plant_name: Yup.string()
@@ -42,22 +43,27 @@ const PlantForm = () => {
                 .integer('Category must be an integer.')
         }),
         onSubmit: (values) => {
-            let newPlant = {
+            console.log("Submitting plant data:", values);
+
+            let plantDataToSend = {
                 plant_name: values.plant_name,
                 image: values.image,
                 created_at: values.created_at,
                 category_id: values.category_id ? parseInt(values.category_id) : null,
 
-                new_cat: values.new_cat ? values.new_cat : null
-                // user_id: user.id
+                user_id: user.id
+                
             }
-                        fetch('http://localhost:5555/new_plant', {
+            console.log("Sending plantDataToSend:", plantDataToSend)
+
+            
+                        fetch('/new_plant', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                             },
-                            credentials: 'include',
-                body: JSON.stringify(newPlant)
+                            
+                body: JSON.stringify(plantDataToSend)
                         })
                             
                             
@@ -73,17 +79,18 @@ const PlantForm = () => {
                             
                             
                             .then(data => {
+                                console.log('Plant created:', data)
                                 // fetchUserData()
-                                 
-                                setUserCategories(prev => {
-                                    const existingCategory = prev.some(cat => cat.id === data.plant.category.id)
-                                    return existingCategory ? prev : [...prev, data.plant.category]
-                        }
-                    )
-                    setPlants(prev => [
-                        ...prev, data.plant
-                    ])
+                                setPlants(prevPlants => [...prevPlants, data.plant])
                                 
+                                
+                                setUserCategories(prev => {
+                                    const category = data.plant.category
+                                    if (!category) return prev  
+                                    const exists = prev.some(cat => cat.id === category.id)
+                                    return exists ? prev : [...prev, category]
+                                })
+                                                                
                                 
                                 
                     formik.resetForm({
@@ -97,7 +104,7 @@ const PlantForm = () => {
                         errors: {}
                       })
             })
-            .catch(e => console.error(e.message))
+            .catch(err => console.error(console.error('Backend error:', err)))
         }
     })
     
