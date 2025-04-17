@@ -20,8 +20,8 @@ class User(db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
 
     plants = db.relationship('Plant', back_populates='user', lazy='joined')
-    # categories = db.relationship('Category', secondary='plants', back_populates='users')
-    # care_notes = db.relationship('CareNote', secondary='plants', back_populates='users')
+    # categories = db.relationship('Category', secondary='plants', back_populates='users', overlaps="user,plants")
+    
 
     categories = db.relationship(
         "Category",
@@ -98,7 +98,8 @@ class Category(db.Model):
     category_name = db.Column(db.String(100), nullable=False, unique=True)
     
     plants = db.relationship('Plant', back_populates='category')
-    
+    # users = db.relationship('User', secondary='plants', back_populates='categories', overlaps="category,plants")
+
     @validates('category_name')
     def validate_category_name(self, key, category_name):
         if not category_name or not isinstance(category_name, str):

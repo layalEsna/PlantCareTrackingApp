@@ -50,22 +50,33 @@ const CareNoteForm = ({plantId}) => {
                     }
                     return res.json()
                 })
+               
+
                 .then(data => {
-                //     setPlants(prevaPlants => 
-                //         prevaPlants.map(plant => {
-                //             if (plant.id === data.plant_id) {
-                //                 return {
-                //                     ...plant, 
-                //                     careNotes: [...(plant.careNotes || []), data]
-                //                 }
-                //             }
-                //             return plant
-                //         })
-                //  )
+                
+  
+                    setPlants(prevPlants =>
+                        prevPlants.map(plant => {
+                          if (plant.id === data.plant_id) {
+                            return {
+                              ...plant,
+                              care_notes: [...(plant.care_notes || []), data]
+                            }
+                          }
+                          return plant
+                        })
+                      )
 
                 
-                    setCareNotes(prev=>[...prev, data])
+                    // setCareNotes(prev => [...prev, payload])
+                   
+                    formik.resetForm()
+                        
                 })
+                
+
+                
+
                 .catch(e => console.error(e))
         }
 

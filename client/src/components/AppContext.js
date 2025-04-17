@@ -30,8 +30,8 @@ export const AppProvider = ({ children }) => {
                 setUser(data);
                 setUserCategories(data.categories || []);
                 setPlants(data.plants || []);
-                const allCareNotes = data.plants?.flatMap(plant => plant.care_notes || []);
-                setCareNotes(allCareNotes);
+                const allCareNotes = data.plants?.map(plant => plant.care_notes || []);
+                setCareNotes(allCareNotes)
             })
             .catch(e => console.log(e));
     }

@@ -91,18 +91,18 @@ const PlantForm = () => {
                                     return exists ? prev : [...prev, category]
                                 })
                                                                 
+                     formik.resetForm()           
                                 
-                                
-                    formik.resetForm({
-                        values: {
-                          plant_name: '',
-                          image: '',
-                          created_at: '',
-                          category_id: '',
-                        },
-                        touched: {},
-                        errors: {}
-                      })
+                    // formik.resetForm({
+                    //     values: {
+                    //       plant_name: '',
+                    //       image: '',
+                    //       created_at: '',
+                    //       category_id: '',
+                    //     },
+                    //     touched: {},
+                    //     errors: {}
+                    //   })
             })
             .catch(err => console.error(console.error('Backend error:', err)))
         }

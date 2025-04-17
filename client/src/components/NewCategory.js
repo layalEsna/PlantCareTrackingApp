@@ -41,7 +41,7 @@ const NewCategory = () => {
                         else {
                             setAllCategories (prev => [...prev, data])
                         }
-                        formik.resetForm({ values: { category_name: '' }, touched: {}, errors: {} });
+                        formik.resetForm({ values: { category_name: '' }, touched: {}, errors: {} })
 
                     
                 
