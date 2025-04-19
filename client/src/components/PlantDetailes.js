@@ -1,28 +1,35 @@
+import { useLocation, useParams } from "react-router-dom"
 import { useContext } from "react"
-import { useLocation } from "react-router-dom"
 import AppContext from "./AppContext"
 import CareNoteForm from "./CareNoteForm"
-import { useNavigate } from "react-router-dom"
-//plant.category
+
+
 const PlantDetailes = () => {
-    const navigate = useNavigate()
-    const { state } = useLocation()
     const { user, plants, userCategories, setPlants } = useContext(AppContext)
-
-    if (!user || !user.username) {
-        return <p>Loading user data...</p>
+    const location = useLocation()
+    const { id: paramId } = useParams()
+    const plantId = location.state?.plantId || paramId
+    if (!user || !user.username || !plantId || !plants.length || !userCategories.length) {
+        return <p>Loading data.......plant detail page</p>
     }
+    
 
-    const plantId = state?.plantId
+    const plant = plants.find(p => p.id === Number(plantId))
+    console.log("🧪 plants[0]:", plants[0])
 
-    const plant = plants.find(p => p.id === plantId)
+    console.log("plantId from state:", plantId)
+    console.log("typeof plantId:", typeof plantId)
 
-    if (!plant) {
+    console.log("plants from context:", plants)
+    console.log("plant:", plant)
+
+    if (!plant || !plants.length) {
         return <p>Plant not found...</p>
     }
+    console.log("userCategories from context:", userCategories)
 
     const category = userCategories.find(cat => cat.id === plant.category_id)
-
+    console.log('category from context', category)
     function handleDelete(plantId) {
         fetch(`/plant/${plantId}`, {
             method: 'DELETE',
@@ -32,10 +39,9 @@ const PlantDetailes = () => {
                 return res.json()
             })
             .then(() => {
-                const selectedPlant = plants.filter(plant => plant.id !== plantId)
-                setPlants(prev => [...prev, selectedPlant])
-                 navigate(`/plant/${plantId}`)
-                // setPlants(plants => plants.filter(p => p.id !== plantId))
+
+                setPlants(prev => prev.filter(p => p.id !== plantId))
+
             })
             .catch(e => console.error(e))
     }
@@ -44,7 +50,7 @@ const PlantDetailes = () => {
         <div>
             <h4>🌿 Plant: {plant.plant_name}</h4>
             <h5>Category: {category?.category_name || "Unknown"}</h5>
-            <button onClick={() => handleDelete(plantId)}>Delete: {plant.plant_name}</button>
+            <button onClick={() => handleDelete(plant.id)}>Delete: {plant.plant_name}</button>
 
             <p>Care Notes:</p>
             {plant.care_notes && plant.care_notes.length ? (

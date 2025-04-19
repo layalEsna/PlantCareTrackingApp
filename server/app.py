@@ -9,6 +9,7 @@ from datetime import datetime, timedelta, date
 from dotenv import load_dotenv
 from flask_migrate import Migrate
 from marshmallow import ValidationError
+from collections import defaultdict
 
 load_dotenv()
 import os
@@ -44,20 +45,35 @@ def logout():
     return redirect(url_for('index')) 
 
 
-        
-
 class CheckSession(Resource):
     def get(self):
         user_id = session.get('user_id')
         if not user_id:
             return {'error': 'Unauthorized.'}, 401
 
-        user = User.query.get(user_id)
+        user = db.session.get(User, user_id)
         if not user:
             return {'error': 'User not found.'}, 404
+        categories_data = [
+              {
+                **CategorySchema(only=("id", "category_name")).dump(cat),
+                "plants": [
+                    PlantSchema(only=["id", "plant_name", "created_at", "image", "category_id", "care_notes"]).dump(p)
+                    for p in cat.plants if p.user_id == user.id
+                ]
+            }
+            for cat in user.categories
+            if any(p.user_id == user.id for p in cat.plants)
+            ]
 
-        user_data = UserSchema().dump(user)
+        user_data = {
+            **UserSchema(only=('id', 'username')).dump(user),
+            
+            "categories": categories_data
+        }
+
         return user_data, 200
+
 
 
 class Login(Resource):

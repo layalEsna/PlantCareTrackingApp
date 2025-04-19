@@ -14,30 +14,38 @@ export const AppProvider = ({ children }) => {
     const [allCategories, setAllCategories] = useState([])
     const [careNotes, setCareNotes] = useState([])
 
- 
-
-
     function fetchUserData() {
+        
         fetch('/check_session')
             .then(res => {
                 if (!res.ok) {
-                    throw new Error('Failed to fetch data.');
-                }
-                return res.json();
+                    throw new Error('failed to fetch data.')
+                }return res.json()
             })
             .then(data => {
-                console.log('🟢', data);
-                setUser(data);
-                setUserCategories(data.categories || []);
-                setPlants(data.plants || []);
-                const allCareNotes = data.plants?.map(plant => plant.care_notes || []);
-                setCareNotes(allCareNotes)
+             
+                setUser(data)
+                setUserCategories(data.categories)
+                
+                const userPlants = data.categories.flatMap(cat => cat.plants)
+                // setPlants(prev=> [...prev,userPlants])
+                setPlants(userPlants)
+                
+                
+                const userCareNotes = userPlants.flatMap(p => p.care_notes);
+                  
+                setCareNotes(userCareNotes)
+                   
+
+                  
+                
+
             })
-            .catch(e => console.log(e));
+            .catch(e => console.error(e))
+        
     }
+
     
-
-
     useEffect(() => {
         fetchUserData()
     }, [])
@@ -51,8 +59,10 @@ export const AppProvider = ({ children }) => {
             })
             .then(data => {
                 setAllCategories(data)
-                // console.log('➡️all cats', data)
+                //
+                //  console.log('➡️all cats', data)
             })
+            
             .catch()
     }, [])
 

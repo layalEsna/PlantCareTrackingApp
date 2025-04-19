@@ -39,7 +39,8 @@ const NewCategory = () => {
                             return 
                         }
                         else {
-                            setAllCategories (prev => [...prev, data])
+                            setAllCategories(prev => [...prev, data])
+                            alert('Category added 🎉')
                         }
                         formik.resetForm({ values: { category_name: '' }, touched: {}, errors: {} })
 

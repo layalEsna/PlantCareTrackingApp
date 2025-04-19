@@ -10,7 +10,9 @@ import NewCategory from "./NewCategory";
 // console.log(first)
 const PlantForm = () => {
     const navigate = useNavigate()
-    const {user, allCategories, setUserCategories, setPlants, fetchUserData, setCareNotes} = useContext(AppContext)
+    // const location = useLocation();
+    // const plant = location.state?.plant;
+    const {user, allCategories, setUserCategories, setPlants, setUser, setAllCategories} = useContext(AppContext)
 
     const formik = useFormik({
         initialValues: {
@@ -74,41 +76,65 @@ const PlantForm = () => {
                     }
                     return res.json()
                 })
-         
                             
+                .then(data => {
+                    const newPlant = data.plant;
+                    const newCategory = newPlant.category;
+                
+                    
+                    setPlants(prevPlants => [...prevPlants, newPlant])
+
+                    
+                    
+                    setUserCategories(prev => {
+                        const exists = prev.some(cat => cat.id === newCategory.id)
+                
+                        if (exists) {
+                           
+                            return prev.map(cat => {
+                                if (cat.id === newCategory.id) {
+                                    return {
+                                        ...cat,
+                                        plants: [...(cat.plants || []), newPlant]  
+                                    };
+                                }
+                                return cat;
+                            });
+                        } else {
                             
+                            return [...prev, {
+                                ...newCategory,
+                                plants: [newPlant]  
+                            }]
+                        }
+                    })
+                
+                
+                  
+                    setUser(prevUser => {
+                        const updatedGroupedPlants = { ...prevUser.plants }
+                        const categoryName = newCategory.category_name
+                
+                        if (!updatedGroupedPlants[categoryName]) {
+                            updatedGroupedPlants[categoryName] = []
+                        }
+                
+                        updatedGroupedPlants[categoryName].push(newPlant)
+                
+                        return { ...prevUser, plants: updatedGroupedPlants }
+
+                    })
+
+                    
+                    formik.resetForm()
+                    })
+                                
                             
-                            .then(data => {
-                                console.log('Plant created:', data)
-                                // fetchUserData()
-                                setPlants(prevPlants => [...prevPlants, data.plant])
-                                
-                                
-                                setUserCategories(prev => {
-                                    const category = data.plant.category
-                                    if (!category) return prev  
-                                    const exists = prev.some(cat => cat.id === category.id)
-                                    return exists ? prev : [...prev, category]
-                                })
-                                                                
-                     formik.resetForm()           
-                                
-                    // formik.resetForm({
-                    //     values: {
-                    //       plant_name: '',
-                    //       image: '',
-                    //       created_at: '',
-                    //       category_id: '',
-                    //     },
-                    //     touched: {},
-                    //     errors: {}
-                    //   })
-            })
+                                                          
             .catch(err => console.error(console.error('Backend error:', err)))
         }
     })
     
-
     return (
         <div>
             <h5>Add a Plant</h5>
