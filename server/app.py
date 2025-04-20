@@ -253,6 +253,23 @@ class DeletePlant(Resource):
         return {'message': 'Plant deleted successfully.'}, 200
 
 
+class DeleteCareNote(Resource):
+    def delete(self,plant_id, care_note_id):
+        user_id = session.get('user_id')
+        if not user_id:
+            return {'error': 'Unauthorized.'}, 401
+                    
+            
+        care_note = CareNote.query.join(Plant).filter(CareNote.plant_id == plant_id, CareNote.id == care_note_id, Plant.user_id == user_id).first()
+
+        if not care_note:
+            return {'error': 'Care note not found.'}, 404
+            
+        db.session.delete(care_note)
+        db.session.commit()
+
+        return {'message': 'Care note deleted successfully.'}, 200
+
     
 api.add_resource(CheckSession, '/check_session')
 # api.add_resource(Signup, '/signup')
@@ -262,6 +279,7 @@ api.add_resource(Categories, '/categories')
 api.add_resource(NewCategory, '/new_category')
 api.add_resource(CareNoteForm, '/new_care_note')
 api.add_resource(DeletePlant, '/plant/<int:plant_id>')
+api.add_resource(DeleteCareNote, '/plants/<int:plant_id>/care_notes/<int:care_note_id>')
 
 
 
