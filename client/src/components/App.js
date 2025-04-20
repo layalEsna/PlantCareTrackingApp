@@ -8,7 +8,7 @@ import LandingPage from "./LandingPage";
 import Login from "./Login";
 import UserCategory from "./UserCategory";
 import PlantForm from "./PlantForm";
-import PlantDetailes from "./PlantDetailes";
+import PlantDetails from "./plantDetais";
 import CareNoteForm from "./CareNoteForm";
 
 
@@ -22,7 +22,7 @@ function App() {
           <Route path="/users/:user_id" element={<LandingPage />}/>
           <Route path="/users/categories/:categoryId" element={<UserCategory/> } /> 
           <Route path="/new_plant" element={<PlantForm/> } />
-          <Route path="/plant/:plantId" element={<PlantDetailes/> } />
+          <Route path="/plant/:plantId" element={<PlantDetails/> } />
           <Route path="/new_care_note" element={<CareNoteForm/> } />
           {/* <Route path="/new_care_note" element={<CareNoteForm/> } /> */}
            

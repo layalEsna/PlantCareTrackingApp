@@ -1,32 +1,35 @@
-import { useLocation, useParams } from "react-router-dom"
+
+
+import { useLocation, useNavigate } from "react-router-dom"
 import { useContext } from "react"
 import AppContext from "./AppContext"
 import CareNoteForm from "./CareNoteForm"
 
 
-const PlantDetailes = () => {
-   
+const PlantDetails = () => {
+
     const { user, userCategories, setUserCategories, setPlants } = useContext(AppContext)
     const location = useLocation()
-        const plantId = location.state?.plantId
+    const plantId = location.state?.plantId
     const categoryId = location.state?.categoryId
+    const navigate = useNavigate()
 
-    
-    if (!user || !user.username || !plantId ) {
+    if (!user || !user.username || !plantId) {
         return <p>Loading data.......plant detail page</p>
-    }  
+    }
 
     const category = userCategories.find(cat => cat.id === categoryId)
     const catPlants = category.plants
 
 
-  
+
     const filteredPlants = catPlants.filter(p => p.id !== Number(plantId))
     const plant = category.plants.find(p => p.id === Number(plantId))
-    
+
     if (!plant || !category.plants.length) {
         return <p>Plant not found...</p>
     }
+
 
     function handleDelete(plantId) {
         fetch(`/plant/${plantId}`, {
@@ -37,31 +40,44 @@ const PlantDetailes = () => {
                 return res.json()
             })
             .then(() => {
+                setPlants(filteredPlants)
 
-              
-                   setPlants (filteredPlants)
-                // setPlants(prev => prev.filter(p => p.id !== plantId))
-
-                
-            
-                setUserCategories(prevCats =>
-                    prevCats.map(cat => {
-                      if (cat.id === categoryId) {
-                        return {
-                          ...cat,
-                          plants: cat.plants.filter(p => p.id !== Number(plantId))
-                        };
-                      }
-                      return cat;
+                if (filteredPlants.length > 0) {
+                    navigate(`/users/categories/${category.id}`, {
+                        state: { categoryId: category.id, updatedPlants: filteredPlants },
                     })
-                  )
-                  
-                  
+                } else {
+                    
+                    const updatedCategories = userCategories.filter(cat => cat.id !== categoryId)
+                    setUserCategories(updatedCategories)
+                    navigate(`/users/${user.id}`)
 
-
+                    
+                    navigate(`/users/${user.id}`) 
+                }
             })
             .catch(e => console.error(e))
     }
+
+
+
+    const onAddNote = (newNote) => {
+        setUserCategories(prevCats =>
+            prevCats.map(cat =>
+                cat.id === categoryId
+                    ? {
+                        ...cat,
+                        plants: cat.plants.map(p =>
+                            p.id === plant.id
+                                ? { ...p, care_notes: [...(p.care_notes || []), newNote] }
+                                : p
+                        )
+                    }
+                    : cat
+            )
+        );
+    };
+
 
     return (
         <div>
@@ -84,10 +100,12 @@ const PlantDetailes = () => {
             )}
 
             <div>
-                <CareNoteForm plantId={plant.id} />
+               
+                <CareNoteForm plantId={plant.id} onAddNote={onAddNote} />
+
             </div>
         </div>
     )
 }
 
-export default PlantDetailes
+export default PlantDetails

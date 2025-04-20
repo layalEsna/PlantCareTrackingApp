@@ -2,10 +2,11 @@ import { useFormik } from "formik";
 import * as Yup from 'yup'
 import { useContext } from "react";
 import AppContext from "./AppContext";
+import { useLocation } from "react-router-dom";
 
-const CareNoteForm = ({plantId}) => {
-    const {careNotes, setCareNotes, setPlants} = useContext(AppContext)
-
+const CareNoteForm = ({ plantId, onAddNote }) => {
+    const { careNotes, setCareNotes, setPlants } = useContext(AppContext)
+    
     const formik = useFormik({
         initialValues: {
             care_type: '',
@@ -54,21 +55,13 @@ const CareNoteForm = ({plantId}) => {
 
                 .then(data => {
                 
-  
-                    setPlants(prevPlants =>
-                        prevPlants.map(plant => {
-                          if (plant.id === data.plant_id) {
-                            return {
-                              ...plant,
-                              care_notes: [...(plant.care_notes || []), data]
-                            }
-                          }
-                          return plant
-                        })
-                      )
+                    setCareNotes(prev => [...prev, payload])
+                    
+                    if (onAddNote) {
+                        onAddNote(data)
+                      }
 
-                
-                    // setCareNotes(prev => [...prev, payload])
+                    
                    
                     formik.resetForm()
                         
