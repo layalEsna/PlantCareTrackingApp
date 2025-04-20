@@ -39,7 +39,7 @@ const UserCategory = () => {
             {category.plants.length > 0 ? (
                 category.plants.map(plant => (
                     <div key={plant.id}>
-                        <Link to={`/plant/${plant.id}`} state={{ plantId: plant.id }}>
+                        <Link to={`/plant/${plant.id}`} state={{ plantId: plant.id, categoryId: category.id }}>
                             {plant.plant_name}
                         </Link>
                     </div>

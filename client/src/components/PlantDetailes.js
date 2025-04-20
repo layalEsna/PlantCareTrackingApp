@@ -5,31 +5,29 @@ import CareNoteForm from "./CareNoteForm"
 
 
 const PlantDetailes = () => {
-    const { user, plants, userCategories, setPlants } = useContext(AppContext)
+   
+    const { user, userCategories, setUserCategories, setPlants } = useContext(AppContext)
     const location = useLocation()
-    const { id: paramId } = useParams()
-    const plantId = location.state?.plantId || paramId
-    if (!user || !user.username || !plantId || !plants.length || !userCategories.length) {
-        return <p>Loading data.......plant detail page</p>
-    }
+        const plantId = location.state?.plantId
+    const categoryId = location.state?.categoryId
+
     
+    if (!user || !user.username || !plantId ) {
+        return <p>Loading data.......plant detail page</p>
+    }  
 
-    const plant = plants.find(p => p.id === Number(plantId))
-    console.log("🧪 plants[0]:", plants[0])
+    const category = userCategories.find(cat => cat.id === categoryId)
+    const catPlants = category.plants
 
-    console.log("plantId from state:", plantId)
-    console.log("typeof plantId:", typeof plantId)
 
-    console.log("plants from context:", plants)
-    console.log("plant:", plant)
-
-    if (!plant || !plants.length) {
+  
+    const filteredPlants = catPlants.filter(p => p.id !== Number(plantId))
+    const plant = category.plants.find(p => p.id === Number(plantId))
+    
+    if (!plant || !category.plants.length) {
         return <p>Plant not found...</p>
     }
-    console.log("userCategories from context:", userCategories)
 
-    const category = userCategories.find(cat => cat.id === plant.category_id)
-    console.log('category from context', category)
     function handleDelete(plantId) {
         fetch(`/plant/${plantId}`, {
             method: 'DELETE',
@@ -40,7 +38,26 @@ const PlantDetailes = () => {
             })
             .then(() => {
 
-                setPlants(prev => prev.filter(p => p.id !== plantId))
+              
+                   setPlants (filteredPlants)
+                // setPlants(prev => prev.filter(p => p.id !== plantId))
+
+                
+            
+                setUserCategories(prevCats =>
+                    prevCats.map(cat => {
+                      if (cat.id === categoryId) {
+                        return {
+                          ...cat,
+                          plants: cat.plants.filter(p => p.id !== Number(plantId))
+                        };
+                      }
+                      return cat;
+                    })
+                  )
+                  
+                  
+
 
             })
             .catch(e => console.error(e))
