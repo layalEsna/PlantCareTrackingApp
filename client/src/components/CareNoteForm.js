@@ -5,8 +5,8 @@ import AppContext from "./AppContext";
 import { useLocation } from "react-router-dom";
 
 const CareNoteForm = ({ plantId, onAddNote }) => {
-    const { careNotes, setCareNotes, setPlants } = useContext(AppContext)
-    
+    const { setUserCategories } = useContext(AppContext)
+
     const formik = useFormik({
         initialValues: {
             care_type: '',
@@ -26,7 +26,7 @@ const CareNoteForm = ({ plantId, onAddNote }) => {
             starting_date: Yup.date()
                 .required('starting_date is required')
                 .typeError('Starting date must be a valid date.'),
-            
+
 
         }),
         onSubmit: (values) => {
@@ -34,7 +34,7 @@ const CareNoteForm = ({ plantId, onAddNote }) => {
             const payload = {
                 ...values,
                 frequency: parseInt(values.frequency, 10),
-                
+
             }
 
             fetch('/new_care_note', {
@@ -51,30 +51,47 @@ const CareNoteForm = ({ plantId, onAddNote }) => {
                     }
                     return res.json()
                 })
-               
+
 
                 .then(data => {
-                
-                    setCareNotes(prev => [...prev, payload])
-                    
+
+                    setUserCategories(prevCats =>
+                        prevCats.map(cat =>
+                            cat.id === data.id
+                                ? {
+                                    ...cat,
+                                    plants: cat.plants.map(p =>
+                                        p.id === data.plant_id
+                                            ? { ...p, care_notes: [...p.care_notes, data] }
+                                            : p
+                                    ),
+
+                                }
+                                : cat
+                        )
+                    )
+
+
+                    // setCareNotes(prev => [...prev, payload])
+
                     if (onAddNote) {
                         onAddNote(data)
-                      }
+                    }
 
-                    
-                   
+
+
                     formik.resetForm()
-                        
-                })
-                
 
-                
+                })
+
+
+
 
                 .catch(e => console.error(e))
         }
 
     })
-
+    
     return (
         <div>
             <h3>Care Note Form:</h3>
@@ -123,7 +140,7 @@ const CareNoteForm = ({ plantId, onAddNote }) => {
                     )}
                 </div>
                 <button type="submit">Add Care Note</button>
-
+                
             </form>
 
         </div>

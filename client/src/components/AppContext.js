@@ -9,10 +9,10 @@ const AppContext = createContext()
 export const AppProvider = ({ children }) => {
 
     const [user, setUser] = useState(null)
-    const [plants, setPlants] = useState([])
+    // const [plants, setPlants] = useState([])
     const [userCategories, setUserCategories] = useState([])
     const [allCategories, setAllCategories] = useState([])
-    const [careNotes, setCareNotes] = useState([])
+    // const [careNotes, setCareNotes] = useState([])
 
     function fetchUserData() {
         
@@ -28,13 +28,13 @@ export const AppProvider = ({ children }) => {
                 setUserCategories(data.categories)
                 
                 const userPlants = data.categories.flatMap(cat => cat.plants)
-                // setPlants(prev=> [...prev,userPlants])
-                setPlants(userPlants)
+                
+                // setPlants(userPlants)
                 
                 
-                const userCareNotes = userPlants.flatMap(p => p.care_notes);
+                // const userCareNotes = userPlants.flatMap(p => p.care_notes);
                   
-                setCareNotes(userCareNotes)
+                // setCareNotes(userCareNotes)
                    
 
                   
@@ -70,15 +70,15 @@ export const AppProvider = ({ children }) => {
         <AppContext.Provider value={{
             user,
             setUser,
-            plants,
+            // plants,
             userCategories,
             fetchUserData,
-            setPlants,
+            // setPlants,
             setUserCategories,
             allCategories,
             setAllCategories,
-            careNotes,
-            setCareNotes
+            // careNotes,
+            // setCareNotes
 
         }}>
             {children}

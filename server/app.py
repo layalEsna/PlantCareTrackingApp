@@ -261,6 +261,9 @@ class DeleteCareNote(Resource):
                     
             
         care_note = CareNote.query.join(Plant).filter(CareNote.plant_id == plant_id, CareNote.id == care_note_id, Plant.user_id == user_id).first()
+        print(f"User ID: {user_id}")
+        print(f"Plant ID: {plant_id}, Care Note ID: {care_note_id}")
+        print(f"Care note info: {care_note.plant_id if care_note else 'No note'}")
 
         if not care_note:
             return {'error': 'Care note not found.'}, 404

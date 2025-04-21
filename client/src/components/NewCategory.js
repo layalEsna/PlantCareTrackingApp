@@ -27,26 +27,38 @@ const NewCategory = () => {
                 },
                 body: JSON.stringify(values)
             })
-                .then(res => {
+                .then(async res => {
+                    const data = await res.json()
                     if (!res.ok) {
-                    throw new Error('Failed to fetch data.')
-                }return res.json()
+                        // throw new Error(data.error || 'Failed to fetch data.')
+                        if (data.error === 'Category already exists.') {
+                            alert(data.error)
+                            return null
+                        }
+                        throw new Error(data.error || 'Failed to fetch data.')
+ 
+                    }
+                    return data
+                    // return res.json()
             })
                 .then(data => {
-                    console.log("🟢 Response from /new_category:", data)
+                    // console.log("🟢 Response from /new_category:", data)
                     const existedCategory = allCategories.some(cat => cat.id === data.id)
-                        if (existedCategory) {
-                            return 
+                    if (existedCategory) {
+                            // return
+                            alert('The category already exists.') 
                         }
                         else {
                             setAllCategories(prev => [...prev, data])
                             alert('Category added 🎉')
                         }
-                        formik.resetForm({ values: { category_name: '' }, touched: {}, errors: {} })
+                        // formik.resetForm({ values: { category_name: '' }, touched: {}, errors: {} })
 
                     
                 
-            })
+                })
+                formik.resetForm({ values: { category_name: '' }, touched: {}, errors: {} })
+
             .catch(e => console.error(e))
         }
     })

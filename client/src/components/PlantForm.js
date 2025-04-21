@@ -12,7 +12,7 @@ const PlantForm = () => {
     const navigate = useNavigate()
     // const location = useLocation();
     // const plant = location.state?.plant;
-    const {user, allCategories, setUserCategories, setPlants, setUser, setAllCategories} = useContext(AppContext)
+    const {user, allCategories, setUserCategories, setUser} = useContext(AppContext)
 
     const formik = useFormik({
         initialValues: {
@@ -82,7 +82,7 @@ const PlantForm = () => {
                     const newCategory = newPlant.category;
                 
                     
-                    setPlants(prevPlants => [...prevPlants, newPlant])
+                    // setPlants(prevPlants => [...prevPlants, newPlant])
 
                     
                     
