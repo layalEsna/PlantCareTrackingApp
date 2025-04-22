@@ -175,8 +175,6 @@ const PlantDetails = () => {
       .catch(e => console.error(e))
   }
     
-    
-
   return (
     <div>
       <h4>🌿 Plant: {plant.plant_name}</h4>

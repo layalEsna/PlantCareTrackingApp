@@ -292,7 +292,7 @@ class EditCareNote(Resource):
         starting_date = data.get('starting_date')
         # next_care_date = data.get('next_care_date')
         plant_id = data.get('plant_id')
-        print("PATCH received data:", data)
+        # print("PATCH received data:", data)
 
         
         if not care_type or not isinstance(care_type, str):
