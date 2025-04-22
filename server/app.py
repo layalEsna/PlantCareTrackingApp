@@ -273,7 +273,59 @@ class DeleteCareNote(Resource):
 
         return {'message': 'Care note deleted successfully.'}, 200
 
-    
+
+class EditCareNote(Resource):
+    def patch(self, plant_id, care_note_id):
+
+
+        user_id = session.get('user_id')
+        if not user_id:
+            return {'error': 'Unauthorized.'}, 401
+        selected_care_note = CareNote.query.join(Plant).filter(Plant.id == plant_id, CareNote.id == care_note_id, Plant.user_id == user_id).first()
+        if not selected_care_note:
+            return {'error': 'Care note not found.'}, 404
+        
+        data = request.get_json()
+        # id = data.get('id')
+        care_type = data.get('care_type')
+        frequency = data.get('frequency')
+        starting_date = data.get('starting_date')
+        # next_care_date = data.get('next_care_date')
+        plant_id = data.get('plant_id')
+        print("PATCH received data:", data)
+
+        
+        if not care_type or not isinstance(care_type, str):
+            return {'error': 'care_type is required and must be a string.'}, 400
+        if len(care_type) < 5 or len(care_type) > 100:
+            return {'error': 'care_type must be between 5 and 100 characters inclusive.'}, 400
+        
+        if not frequency or not isinstance(frequency, int):
+            return {'error': 'frequency is required and must be a number.'}, 400
+        if frequency < 1:
+            return {'error': 'Frequency must be a positive number.'}, 400
+        try:
+            starting_date = datetime.strptime(starting_date, '%Y-%m-%d').date()
+        except (ValueError, TypeError):
+            return {'error': 'starting_date must be a valid date in YYYY-MM-DD format.'}, 400
+        
+        next_care_date = starting_date + timedelta(days=frequency)
+        # if not plant_id:
+        #     return {'error': 'plant id is required.'}, 400
+
+        selected_care_note.care_type = care_type
+        selected_care_note.frequency = frequency
+        selected_care_note.starting_date = starting_date
+        selected_care_note.next_care_date = next_care_date
+        # selected_care_note.plant_id = plant_id
+
+        db.session.commit()
+
+        care_note_schema = CareNoteSchema().dump(selected_care_note)
+        return care_note_schema, 200
+ 
+
+
 api.add_resource(CheckSession, '/check_session')
 # api.add_resource(Signup, '/signup')
 api.add_resource(Login, '/login')
@@ -283,6 +335,7 @@ api.add_resource(NewCategory, '/new_category')
 api.add_resource(CareNoteForm, '/new_care_note')
 api.add_resource(DeletePlant, '/plant/<int:plant_id>')
 api.add_resource(DeleteCareNote, '/plants/<int:plant_id>/care_notes/<int:care_note_id>')
+api.add_resource(EditCareNote, '/plants/<int:plant_id>/edit/care_notes/<int:care_note_id>')
 
 
 

@@ -5,6 +5,7 @@ import AppContext from "./AppContext"
 import { useLocation } from "react-router-dom"
 import { Link } from "react-router-dom"
 
+
 const UserCategory = () => {
   const { user, userCategories } = useContext(AppContext)
   const { state } = useLocation()
@@ -40,15 +41,23 @@ const UserCategory = () => {
       <h4>Category: {category.category_name || 'Unknown'}</h4>
       {plants.length > 0 ? (
         plants.map(plant => (
-          <div key={plant.id}>
-            <Link to={`/plant/${plant.id}`} state={{ plantId: plant.id, categoryId: category.id }}>
-              {plant.plant_name}
-            </Link>
+            <div key={plant.id}>
+
+<Link
+  to={`/plants/${plant.id}/details/${category.id}`}
+  state={{ plantId: plant.id, categoryId: category.id }}
+>
+  {plant.plant_name}
+</Link>
+
+                
+                
           </div>
         ))
       ) : (
         <p>No plants in this category</p>
-      )}
+          )}
+          
     </div>
   )
 }

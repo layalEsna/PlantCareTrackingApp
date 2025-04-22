@@ -22,9 +22,11 @@ function App() {
           <Route path="/users/:user_id" element={<LandingPage />}/>
           <Route path="/users/categories/:categoryId" element={<UserCategory/> } /> 
           <Route path="/new_plant" element={<PlantForm/> } />
-          <Route path="/plant/:plantId" element={<PlantDetails/> } />
+          
+          <Route path="/plants/:plantId/details/:categoryId" element={<PlantDetails />} />
+
           <Route path="/new_care_note" element={<CareNoteForm/> } />
-          {/* <Route path="/new_care_note" element={<CareNoteForm/> } /> */}
+          
            
         </Routes>
       </Router>

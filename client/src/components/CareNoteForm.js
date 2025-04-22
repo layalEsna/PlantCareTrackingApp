@@ -72,7 +72,7 @@ const CareNoteForm = ({ plantId, onAddNote }) => {
                     )
 
 
-                    // setCareNotes(prev => [...prev, payload])
+                    
 
                     if (onAddNote) {
                         onAddNote(data)
