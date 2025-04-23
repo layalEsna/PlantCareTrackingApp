@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import NewCategory from "./NewCategory";
+// import AsyncSelect from 'react-select/async'
 
 // console.log(first)
 const PlantForm = () => {
@@ -134,7 +135,20 @@ const PlantForm = () => {
             .catch(err => console.error(console.error('Backend error:', err)))
         }
     })
-    
+    function handleSearch(targetCat) {
+        if (!targetCat) {
+            formik.setFieldValue('category_id', '')
+            return
+        }
+        const match = allCategories.find(cat => 
+            cat.category_name.toLowerCase().includes(targetCat.toLowerCase())
+    )
+    if (match){
+        formik.setFieldValue('category_id', match.id)
+    }else{
+        formik.setFieldValue('category_id', '')
+    }
+}
     return (
         <div>
             <h4>Add a Plant</h4>
@@ -184,7 +198,25 @@ const PlantForm = () => {
                     )}
                 </div>
 
-                 <div>
+                <div>
+                
+                    <label htmlFor="category_name">Category Name</label>
+                    <input
+                        type="text"
+                        id="category_name"
+                        name="category_name"
+                        value={formik.values.category_name}
+                        onChange={(e) => {
+                            formik.handleChange(e);
+                            handleSearch(e.target.value)
+                          }}
+                        onBlur={formik.handleBlur}
+                        placeholder="Start typing to search..."
+                        list="categorySuggestions"
+                    />
+                </div>
+
+                 {/* <div>
                     <label htmlFor="category_id">Categories<span class="required">*</span> </label>
                     <select
                         id="category_id"
@@ -201,7 +233,7 @@ const PlantForm = () => {
                             ))
                         )}
                     </select>
-                </div> 
+                </div>  */}
 
                 <div>
                     <button type="submit">Add Plant</button>
