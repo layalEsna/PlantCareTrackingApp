@@ -2,7 +2,7 @@
 
 import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import { AppProvider } from "./AppContext";
-// import Signup from "./Signup";
+import Signup from "./Signup";
 
 import LandingPage from "./LandingPage";
 import Login from "./Login";
@@ -10,6 +10,7 @@ import UserCategory from "./UserCategory";
 import PlantForm from "./PlantForm";
 import PlantDetails from "./plantDetais";
 import CareNoteForm from "./CareNoteForm";
+import Logout from "./Logout";
 
 
 function App() {
@@ -17,7 +18,7 @@ function App() {
     <AppProvider>
       <Router>
         <Routes>
-          {/* <Route path="/signup" element={<Signup />} /> */}
+          <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/users/:user_id" element={<LandingPage />}/>
           <Route path="/users/categories/:categoryId" element={<UserCategory/> } /> 
@@ -26,6 +27,7 @@ function App() {
           <Route path="/plants/:plantId/details/:categoryId" element={<PlantDetails />} />
 
           <Route path="/new_care_note" element={<CareNoteForm/> } />
+          {/* <Route path="/logout" element={<Logout/> } /> */}
           
            
         </Routes>

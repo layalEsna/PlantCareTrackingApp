@@ -39,10 +39,10 @@ CORS(app, supports_credentials=True)
 def index():
     return '<h1>Project Server</h1>'
 
-@app.route('/logout')
-def logout():
-    session.clear() 
-    return redirect(url_for('index')) 
+# @app.route('/logout')
+# def logout():
+#     session.clear() 
+#     return redirect(url_for('index')) 
 
 
 class CheckSession(Resource):
@@ -74,7 +74,40 @@ class CheckSession(Resource):
 
         return user_data, 200
 
+class Signup(Resource):
+    
+    def post(self):
 
+        try:
+            data = request.get_json()
+            username = data.get('username')
+           
+            password = data.get('password')
+            confirm_password = data.get('confirm_password')
+
+            if not all([username, password, confirm_password]):
+                return make_response(jsonify({'error': 'All the fields are required.'}), 400)
+            if password != confirm_password:
+                return make_response(jsonify({'error': 'Password not match.'}), 400)
+            if User.query.filter(User.username==username).first():
+                return make_response(jsonify({'error': 'unique constraint'}), 400)
+            
+            
+            new_user = User(
+                username = username,
+                password = password,
+                
+            )
+
+            db.session.add(new_user)
+            db.session.commit()            
+            session['user_id'] = new_user.id
+            session.permanent = True 
+
+            return make_response(jsonify({'id': new_user.id, 'username': new_user.username}), 201)
+
+        except Exception as e:
+            return make_response(jsonify({'error': f'Internal error: {e}'}), 500)
 
 class Login(Resource):
     def post(self):
@@ -97,6 +130,14 @@ class Login(Resource):
 
         user_data = UserSchema().dump(user)
         return user_data, 200
+    
+class Logout(Resource):
+    def delete(self):
+         if 'user_id' in session:
+             session.pop('user_id', None)
+             return {'message': 'Successful logout.'}, 200
+         return {'error': 'No active session found.'}, 400
+
         
 class NewPlant(Resource):
     def post(self):
@@ -292,7 +333,7 @@ class EditCareNote(Resource):
         starting_date = data.get('starting_date')
         # next_care_date = data.get('next_care_date')
         plant_id = data.get('plant_id')
-        # print("PATCH received data:", data)
+        print("PATCH received data:", data)
 
         
         if not care_type or not isinstance(care_type, str):
@@ -327,7 +368,7 @@ class EditCareNote(Resource):
 
 
 api.add_resource(CheckSession, '/check_session')
-# api.add_resource(Signup, '/signup')
+api.add_resource(Signup, '/signup')
 api.add_resource(Login, '/login')
 api.add_resource(NewPlant, '/new_plant')
 api.add_resource(Categories, '/categories')
@@ -336,7 +377,7 @@ api.add_resource(CareNoteForm, '/new_care_note')
 api.add_resource(DeletePlant, '/plant/<int:plant_id>')
 api.add_resource(DeleteCareNote, '/plants/<int:plant_id>/care_notes/<int:care_note_id>')
 api.add_resource(EditCareNote, '/plants/<int:plant_id>/edit/care_notes/<int:care_note_id>')
-
+api.add_resource(Logout, '/logout')
 
 
 if __name__ == '__main__':

@@ -4,4 +4,70 @@
   --link: #61dafb;
   --text: hsla(0, 0%, 100%, 0.88);
 }
+form {
+  background-color: #f7f7f7;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  margin: auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  color: #111; /* near black */
+  font-family: Arial, sans-serif;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #111;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #111;
+  background-color: #fff;
+}
+
+button, .edit_btn{
+  background-color: #f5f1f1;
+  color: #1c0d0d;
+  padding: 5px 10px;
+  border: 2px solid rgb(71, 3, 134);  /* Explicit border style, width, and color */
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+  margin-left: 10;
+}
+
+button:hover {
+  background-color: #efe8e8;
+}
+
+h3,
+h4,
+h5,
+ul,
+p,
+a,
+
+form,
+.plant_delete_btn {
+  margin-left: 200px;
+}
+
+
+.edit_form {
+  margin-left: 0px;
+}
+
+.logout_btn {
+  margin-left: 200px;
+}
 

@@ -2,20 +2,22 @@
 
 import { useContext } from "react"
 import AppContext from "./AppContext"
-import { useLocation } from "react-router-dom"
-import { Link } from "react-router-dom"
+import { useLocation, Link, useParams } from "react-router-dom"
+
 
 
 const UserCategory = () => {
   const { user, userCategories } = useContext(AppContext)
   const { state } = useLocation()
+    const { categoryId } = useParams()
+    // const { state } = useLocation()
 
-  const categoryId = Number(state?.categoryId)
+  const id = Number(categoryId)
   if (!categoryId) {
     return <p>Category ID missing in URL state</p>
   }
 
-  const category = userCategories.find(cat => cat.id === categoryId)
+  const category = userCategories.find(cat => cat.id === id)
   const updatedPlants = state?.updatedPlants
   const plants = updatedPlants || category?.plants
 
@@ -36,9 +38,12 @@ const UserCategory = () => {
   }
 
   return (
-    <div>
+      <div>
+          <div>
+              <Link to={`/users/${user.id}`}>Home</Link>
+          </div>
       <h3>Username: {user.username} </h3>
-      <h4>Category: {category.category_name || 'Unknown'}</h4>
+      <h3>🌿 Category: {category.category_name || 'Unknown'}</h3>
       {plants.length > 0 ? (
         plants.map(plant => (
             <div key={plant.id}>

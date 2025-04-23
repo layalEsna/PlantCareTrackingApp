@@ -4,6 +4,7 @@ import { useContext } from "react";
 import AppContext from "./AppContext";
 import { Link } from "react-router-dom";
 import PlantForm from "./PlantForm";
+import Logout from "./Logout";
 
 
 const LandingPage = () => {
@@ -35,6 +36,7 @@ const LandingPage = () => {
             </div>
 
             <PlantForm />
+            <Logout/>
            
         </div>
     )

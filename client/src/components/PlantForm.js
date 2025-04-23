@@ -78,9 +78,9 @@ const PlantForm = () => {
                 })
                             
                 .then(data => {
-                    const newPlant = data.plant;
-                    const newCategory = newPlant.category;
-                
+                    const newPlant = data.plant
+                    const newCategory = newPlant.category
+                alert('New plant added 🎉')
                     
                     // setPlants(prevPlants => [...prevPlants, newPlant])
 
@@ -96,7 +96,7 @@ const PlantForm = () => {
                                     return {
                                         ...cat,
                                         plants: [...(cat.plants || []), newPlant]  
-                                    };
+                                    }
                                 }
                                 return cat;
                             });
@@ -137,7 +137,7 @@ const PlantForm = () => {
     
     return (
         <div>
-            <h5>Add a Plant</h5>
+            <h4>Add a Plant</h4>
             <form onSubmit={formik.handleSubmit}>
                 <div>
                     <label htmlFor="plant_name">Plant Name:</label>
