@@ -39,10 +39,6 @@ CORS(app, supports_credentials=True)
 def index():
     return '<h1>Project Server</h1>'
 
-# @app.route('/logout')
-# def logout():
-#     session.clear() 
-#     return redirect(url_for('index')) 
 
 
 class CheckSession(Resource):

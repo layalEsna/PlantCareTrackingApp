@@ -71,3 +71,6 @@ form,
   margin-left: 200px;
 }
 
+.required{
+  color: rgb(231, 16, 16);
+}

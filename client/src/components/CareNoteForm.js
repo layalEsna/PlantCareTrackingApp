@@ -98,7 +98,7 @@ const CareNoteForm = ({ plantId, onAddNote }) => {
 
             <form onSubmit={formik.handleSubmit}>
                 <div>
-                    <label htmlFor="care_type">Care Type:</label>
+                    <label htmlFor="care_type">Care Type<span class="required">*</span></label>
                     <input
                         id="care_type"
                         type="text"
@@ -112,7 +112,7 @@ const CareNoteForm = ({ plantId, onAddNote }) => {
                     )}
                 </div>
                 <div>
-                    <label htmlFor="frequency">Frequency:</label>
+                    <label htmlFor="frequency">Frequency<span class="required">*</span></label>
                     <input
                         id="frequency"
                         name="frequency"
@@ -126,7 +126,7 @@ const CareNoteForm = ({ plantId, onAddNote }) => {
                     )}
                 </div>
                 <div>
-                    <label htmlFor="starting_date">Starting date</label>
+                    <label htmlFor="starting_date">Starting date<span class="required">*</span></label>
                     <input
                         id="starting_date"
                         name="starting_date"

@@ -140,7 +140,7 @@ const PlantForm = () => {
             <h4>Add a Plant</h4>
             <form onSubmit={formik.handleSubmit}>
                 <div>
-                    <label htmlFor="plant_name">Plant Name:</label>
+                    <label htmlFor="plant_name">Plant Name<span class="required">*</span></label>
                     <input
                         name="plant_name"
                         id="plant_name"
@@ -185,13 +185,14 @@ const PlantForm = () => {
                 </div>
 
                  <div>
-                    <label htmlFor="category_id">Categories</label>
+                    <label htmlFor="category_id">Categories<span class="required">*</span> </label>
                     <select
                         id="category_id"
                         name="category_id"
                         value={formik.values.category_id}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
+                        
                     >
                         <option value=''>Select one</option>
                         {allCategories && allCategories.length && (
