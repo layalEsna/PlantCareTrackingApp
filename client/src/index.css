@@ -58,8 +58,10 @@ p,
 a,
 
 form,
-.plant_delete_btn {
+.plant_delete_btn 
+{
   margin-left: 200px;
+  margin-top: 30px;
 }
 
 
@@ -67,10 +69,36 @@ form,
   margin-left: 0px;
 }
 
-.logout_btn {
+.logout_btn,
+.plant_delete_btn,
+.care_note_delete_btn {
   margin-left: 200px;
+  background-color: rgb(142, 72, 142);
+  color: white;
 }
 
-.required{
-  color: rgb(231, 16, 16);
+.logout_btn:hover,
+.plant_delete_btn:hover,
+.care_note_delete_btn:hover {
+  background-color: purple;
 }
+
+
+.required{
+  color: red;
+  margin-left: 5px;
+}
+
+label {
+  margin-top: 20px;
+}
+span {
+  margin-left: 150px;
+  
+  
+}
+
+.green{
+  background-color: rgb(145, 205, 145);
+}
+

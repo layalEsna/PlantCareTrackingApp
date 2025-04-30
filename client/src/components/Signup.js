@@ -3,7 +3,7 @@ import { useFormik } from 'formik'
 import { useNavigate } from 'react-router-dom'
 import * as Yup from 'yup'
 import AppContext from './AppContext'
-
+//class
 const Signup = () => {
     
     const navigate = useNavigate()
@@ -60,7 +60,8 @@ const Signup = () => {
                         throw new Error('Signup failed.')
                     }
                     setUser (data)
-                    navigate(`/users/${data.id}`)
+                    navigate('/')
+                    // navigate(`/users/${data.id}`)
 
                 })
                 .catch(e => {
@@ -109,6 +110,7 @@ const Signup = () => {
                     {formik.errors.password && formik.touched.password && (
                         <div className='error'>{formik.errors.password}</div>
                     )}
+
                 </div>
                 <div>
                     <label htmlFor='confirm_password'>confirm password:</label>

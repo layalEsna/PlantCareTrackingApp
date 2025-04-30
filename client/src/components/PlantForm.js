@@ -1,20 +1,20 @@
 
 
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import AppContext from "./AppContext";
 import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
 import * as Yup from 'yup';
-import { useNavigate } from 'react-router-dom';
-import NewCategory from "./NewCategory";
-// import AsyncSelect from 'react-select/async'
 
-// console.log(first)
+import NewCategory from "./NewCategory";
+
 const PlantForm = () => {
     const navigate = useNavigate()
-    // const location = useLocation();
-    // const plant = location.state?.plant;
+    
     const {user, allCategories, setUserCategories, setUser} = useContext(AppContext)
-
+    
+ // debugger
+       
     const formik = useFormik({
         initialValues: {
             plant_name: '',
@@ -22,6 +22,7 @@ const PlantForm = () => {
             created_at: '',
             user_id: '',
             category_id: '',
+            category_name: ''
             // new_cat: ''
         },
         validationSchema: Yup.object({
@@ -60,7 +61,8 @@ const PlantForm = () => {
             console.log("Sending plantDataToSend:", plantDataToSend)
 
             
-                        fetch('/new_plant', {
+                        fetch('/plants/new', {
+                        
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -148,13 +150,21 @@ const PlantForm = () => {
     }else{
         formik.setFieldValue('category_id', '')
     }
-}
+    }
+    
+    useEffect(() => {
+        if (!user || !user.username) {
+          navigate("/login")
+        }
+    }, [user])
+    if (!user) return null
+
     return (
         <div>
             <h4>Add a Plant</h4>
             <form onSubmit={formik.handleSubmit}>
                 <div>
-                    <label htmlFor="plant_name">Plant Name<span class="required">*</span></label>
+                    <label htmlFor="plant_name">Plant Name<span className="required">*</span></label>
                     <input
                         name="plant_name"
                         id="plant_name"
@@ -184,7 +194,7 @@ const PlantForm = () => {
                 </div>
 
                 <div>
-                    <label htmlFor="created_at">Created at:</label>
+                    <label htmlFor="created_at">Created at<span className="required">*</span></label>
                     <input
                         name="created_at"
                         id="created_at"
@@ -200,7 +210,7 @@ const PlantForm = () => {
 
                 <div>
                 
-                    <label htmlFor="category_name">Category Name</label>
+                    <label htmlFor="category_name">Category Name<span className="required">*</span></label>
                     <input
                         type="text"
                         id="category_name"
@@ -216,24 +226,7 @@ const PlantForm = () => {
                     />
                 </div>
 
-                 {/* <div>
-                    <label htmlFor="category_id">Categories<span class="required">*</span> </label>
-                    <select
-                        id="category_id"
-                        name="category_id"
-                        value={formik.values.category_id}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        
-                    >
-                        <option value=''>Select one</option>
-                        {allCategories && allCategories.length && (
-                            allCategories.map(cat => (
-                                <option key={cat.id} value={cat.id}>{cat.category_name}</option>
-                            ))
-                        )}
-                    </select>
-                </div>  */}
+            
 
                 <div>
                     <button type="submit">Add Plant</button>

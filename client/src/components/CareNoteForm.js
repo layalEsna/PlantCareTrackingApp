@@ -1,12 +1,13 @@
 import { useFormik } from "formik";
 import * as Yup from 'yup'
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import AppContext from "./AppContext";
-import { useLocation } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+
 
 const CareNoteForm = ({ plantId, onAddNote }) => {
-    const { setUserCategories } = useContext(AppContext)
-
+    const { setUserCategories, user } = useContext(AppContext)
+    const navigate = useNavigate()
     const formik = useFormik({
         initialValues: {
             care_type: '',
@@ -37,7 +38,9 @@ const CareNoteForm = ({ plantId, onAddNote }) => {
 
             }
 
-            fetch('/new_care_note', {
+
+            fetch('/care_notes/new', {
+
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -71,9 +74,6 @@ const CareNoteForm = ({ plantId, onAddNote }) => {
                         )
                     )
 
-
-                    
-
                     if (onAddNote) {
                         onAddNote(data)
                     }
@@ -84,21 +84,25 @@ const CareNoteForm = ({ plantId, onAddNote }) => {
 
                 })
 
-
-
-
                 .catch(e => console.error(e))
         }
 
     })
-    
+    useEffect(() => {
+        if (!user || user.error) {
+            navigate("/login");
+        }
+    }, [user])
+
+
+
     return (
         <div>
             <h3>Care Note Form:</h3>
 
             <form onSubmit={formik.handleSubmit}>
                 <div>
-                    <label htmlFor="care_type">Care Type<span class="required">*</span></label>
+                    <label htmlFor="care_type">Care Type<span className="required">*</span></label>
                     <input
                         id="care_type"
                         type="text"
@@ -112,7 +116,7 @@ const CareNoteForm = ({ plantId, onAddNote }) => {
                     )}
                 </div>
                 <div>
-                    <label htmlFor="frequency">Frequency<span class="required">*</span></label>
+                    <label htmlFor="frequency">Frequency<span className="required">*</span></label>
                     <input
                         id="frequency"
                         name="frequency"
@@ -126,7 +130,7 @@ const CareNoteForm = ({ plantId, onAddNote }) => {
                     )}
                 </div>
                 <div>
-                    <label htmlFor="starting_date">Starting date<span class="required">*</span></label>
+                    <label htmlFor="starting_date">Starting date<span className="required">*</span></label>
                     <input
                         id="starting_date"
                         name="starting_date"
@@ -140,7 +144,7 @@ const CareNoteForm = ({ plantId, onAddNote }) => {
                     )}
                 </div>
                 <button type="submit">Add Care Note</button>
-                
+
             </form>
 
         </div>

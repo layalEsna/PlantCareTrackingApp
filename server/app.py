@@ -291,15 +291,23 @@ class DeletePlant(Resource):
 
 
 class DeleteCareNote(Resource):
-    def delete(self,plant_id, care_note_id):
+    def delete(self,care_note_id):
+ 
         user_id = session.get('user_id')
         if not user_id:
             return {'error': 'Unauthorized.'}, 401
                     
             
-        care_note = CareNote.query.join(Plant).filter(CareNote.plant_id == plant_id, CareNote.id == care_note_id, Plant.user_id == user_id).first()
+       
+
+
+        care_note = CareNote.query.join(Plant).filter(
+        CareNote.id == care_note_id,
+        Plant.user_id == user_id
+         ).first()
+
         print(f"User ID: {user_id}")
-        print(f"Plant ID: {plant_id}, Care Note ID: {care_note_id}")
+       
         print(f"Care note info: {care_note.plant_id if care_note else 'No note'}")
 
         if not care_note:
@@ -312,25 +320,24 @@ class DeleteCareNote(Resource):
 
 
 class EditCareNote(Resource):
-    def patch(self, plant_id, care_note_id):
+    
+    def patch(self, care_note_id):
+    
 
 
         user_id = session.get('user_id')
         if not user_id:
             return {'error': 'Unauthorized.'}, 401
-        selected_care_note = CareNote.query.join(Plant).filter(Plant.id == plant_id, CareNote.id == care_note_id, Plant.user_id == user_id).first()
+        selected_care_note = CareNote.query.join(Plant).filter(CareNote.id == care_note_id, Plant.user_id == user_id).first()
         if not selected_care_note:
             return {'error': 'Care note not found.'}, 404
         
         data = request.get_json()
-        # id = data.get('id')
+       
         care_type = data.get('care_type')
         frequency = data.get('frequency')
         starting_date = data.get('starting_date')
-        # next_care_date = data.get('next_care_date')
-        plant_id = data.get('plant_id')
-        print("PATCH received data:", data)
-
+        
         
         if not care_type or not isinstance(care_type, str):
             return {'error': 'care_type is required and must be a string.'}, 400
@@ -347,14 +354,12 @@ class EditCareNote(Resource):
             return {'error': 'starting_date must be a valid date in YYYY-MM-DD format.'}, 400
         
         next_care_date = starting_date + timedelta(days=frequency)
-        # if not plant_id:
-        #     return {'error': 'plant id is required.'}, 400
-
+        
         selected_care_note.care_type = care_type
         selected_care_note.frequency = frequency
         selected_care_note.starting_date = starting_date
         selected_care_note.next_care_date = next_care_date
-        # selected_care_note.plant_id = plant_id
+       
 
         db.session.commit()
 
@@ -363,17 +368,27 @@ class EditCareNote(Resource):
  
 
 
+
 api.add_resource(CheckSession, '/check_session')
-api.add_resource(Signup, '/signup')
+api.add_resource(Signup, '/signup')  
 api.add_resource(Login, '/login')
-api.add_resource(NewPlant, '/new_plant')
-api.add_resource(Categories, '/categories')
-api.add_resource(NewCategory, '/new_category')
-api.add_resource(CareNoteForm, '/new_care_note')
-api.add_resource(DeletePlant, '/plant/<int:plant_id>')
-api.add_resource(DeleteCareNote, '/plants/<int:plant_id>/care_notes/<int:care_note_id>')
-api.add_resource(EditCareNote, '/plants/<int:plant_id>/edit/care_notes/<int:care_note_id>')
 api.add_resource(Logout, '/logout')
+
+
+api.add_resource(Categories, '/categories')            
+api.add_resource(NewCategory, '/categories/new')      
+
+api.add_resource(NewPlant, '/plants/new')                  
+                 
+api.add_resource(DeletePlant, '/plants/<int:plant_id>') 
+
+
+api.add_resource(CareNoteForm, '/care_notes/new')          
+
+api.add_resource(DeleteCareNote, '/care_notes/<int:care_note_id>')  
+api.add_resource(EditCareNote, '/care_notes/<int:care_note_id>')
+
+
 
 
 if __name__ == '__main__':

@@ -1,10 +1,14 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import AppContext from "./AppContext";
 import { useFormik } from "formik";
 import * as Yup from 'yup'
-// 
+
+import { useNavigate } from "react-router-dom";
+
 const NewCategory = () => {
-    const {setAllCategories, allCategories} = useContext(AppContext)
+    const { setAllCategories, allCategories, user, loading} = useContext(AppContext)
+    const navigate = useNavigate()
+
     
     const formik = useFormik({
         
@@ -20,7 +24,7 @@ const NewCategory = () => {
 
         }),
         onSubmit: (values) => {
-            fetch('/new_category', {
+            fetch('/categories/new', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -42,6 +46,7 @@ const NewCategory = () => {
                     // return res.json()
             })
                 .then(data => {
+                    if (!data) return
                     // console.log("🟢 Response from /new_category:", data)
                     const existedCategory = allCategories.some(cat => cat.id === data.id)
                     if (existedCategory) {
@@ -52,7 +57,7 @@ const NewCategory = () => {
                             setAllCategories(prev => [...prev, data])
                             alert('Category added 🎉')
                         }
-                        // formik.resetForm({ values: { category_name: '' }, touched: {}, errors: {} })
+                        
 
                     
                 
@@ -63,7 +68,14 @@ const NewCategory = () => {
         }
     })
 
-
+    useEffect(() => {
+        if (!loading && !user) {
+          navigate("/login");
+        }
+      }, [user, loading, navigate]);
+    
+    
+    
     return (
         <div>
              <p>create a new category if it is not in the list:</p>

@@ -1,7 +1,7 @@
 import { useContext } from "react"
 import AppContext from "./AppContext"
 import { useNavigate } from "react-router-dom"
-
+//class
 const Logout = () => {
 
     const { setUser, setUserCategories } = useContext(AppContext)

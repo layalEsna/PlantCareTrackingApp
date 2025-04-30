@@ -2,20 +2,23 @@
 
 
 
-import { useParams, useNavigate, Link } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
+import { useContext, useState, useEffect } from "react";
 
 import AppContext from "./AppContext";
 import CareNoteForm from "./CareNoteForm";
 import { useFormik } from "formik"
 import * as Yup from 'yup'
 
-// No care notes yet.
+
 
 const PlantDetails = () => {
     const { user, userCategories, setUserCategories } = useContext(AppContext);
-    const { plantId, categoryId } = useParams()
+    
+    const { plantId } = useParams()
+    const { state } = useLocation()
     const [editingNoteId, setEditingNoteId] = useState(null)
+    const categoryId = state?.categoryId
     const navigate = useNavigate()
 
     const plantIdNum = Number(plantId)
@@ -23,11 +26,8 @@ const PlantDetails = () => {
 
     const category = userCategories.find(cat => cat.id === categoryIdNum)
     const plant = category?.plants?.find(p => p.id === plantIdNum)
-    const noteToEdit = plant
-        ? plant.care_notes
-            ? plant.care_notes.find(note => note.id == editingNoteId)
-            : null
-        : null
+    
+    const noteToEdit = plant?.care_notes.find(note => note.id === editingNoteId) || null
 
     const formik = useFormik({
         enableReinitialize: true,
@@ -54,7 +54,9 @@ const PlantDetails = () => {
                 ...values,
                 frequency: parseInt(values.frequency, 10)
             }
-            fetch(`/plants/${plantIdNum}/edit/care_notes/${editingNoteId}`, {
+            
+                fetch(`/care_notes/${editingNoteId}`, {
+
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
@@ -63,7 +65,7 @@ const PlantDetails = () => {
             })
                 .then(res => {
                     if (!res.ok) {
-                        throw new Error('Failed to ferch data.')
+                        throw new Error('Failed to fetch data.')
                     } return res.json()
                 })
                 .then(updatedNote => {
@@ -96,13 +98,20 @@ const PlantDetails = () => {
 
     })
 
-    if (!user || !user.username) return <p>Loading user data...</p>
-    if (!userCategories || userCategories.length === 0) return <p>Loading categories...</p>
-    if (!category || !category.plants) return <p>Category not found...</p>
+    
+
+    if (!user) return null
+
+    if (!user || !user.username) return <Link to='/login'>Login</Link>
+
+   
+
+    if (!userCategories || userCategories.length === 0) return <p>You need to login...</p>
+   
     if (!plant) return <p>Plant not found...</p>
 
     const handleDelete = (plantIdToDelete) => {
-        fetch(`/plant/${plantIdToDelete}`, {
+        fetch(`/plants/${plantIdToDelete}`, {
             method: "DELETE",
         })
             .then(res => {
@@ -116,11 +125,13 @@ const PlantDetails = () => {
                         cat.id === category.id ? { ...cat, plants: updatedPlants } : cat
                     )
                     setUserCategories(updatedCategories)
-                    navigate(`/users/categories/${category.id}`)
+                   
+                    navigate(`/categories/${category.id}/plants`)
                 } else {
                     const updatedCategories = userCategories.filter(cat => cat.id !== category.id)
                     setUserCategories(updatedCategories)
-                    navigate(`/users/${user.id}`)
+                  
+                    navigate('/')
                 }
             })
             .catch(error => {
@@ -128,61 +139,62 @@ const PlantDetails = () => {
             })
     }
 
-    const onAddNote = (newNote) => {
+    
+    function onAddNote(newNote) {
         setUserCategories(prevCats =>
-            prevCats.map(cat =>
-                cat.id === categoryIdNum
-                    ? {
-                        ...cat,
-                        plants: cat.plants.map(p =>
-                            p.id === plant.id
-                                ? { ...p, care_notes: [...(p.care_notes || []), newNote] }
-                                : p
-                        ),
-                    }
-                    : cat
+            prevCats.map(cat => cat.id === categoryIdNum ?
+                {
+                    ...cat, plants: cat.plants.map(p => p.id === plant.id ?
+                        { ...p, care_notes: [...(p.care_notes || []), newNote] }
+                        : p
+                )} : cat
             )
         )
     }
+   
+
 
     const handleDeleteCareNote = (careNoteId) => {
-        fetch(`/plants/${plantIdNum}/care_notes/${careNoteId}`, {
+        fetch(`/care_notes/${careNoteId}`, {
             method: "DELETE"
         })
             .then(res => {
                 if (!res.ok) throw new Error("Failed to delete care note")
                 return res.json()
             })
+
+
+
             .then(() => {
                 setUserCategories(prevCats =>
-                    prevCats.map(cat =>
-                        cat.id === categoryIdNum
-                            ? {
-                                ...cat,
-                                plants: cat.plants.map(p =>
-                                    p.id === plant.id
-                                        ? {
-                                            ...p,
-                                            care_notes: p.care_notes.filter(note => note.id !== careNoteId)
-                                        }
-                                        : p
-                                ),
-                            }
-                            : cat
+                    prevCats.map(cat => cat.id === categoryIdNum
+                        ? {
+                            ...cat, plants: cat.plants.map(p => p.id === plant.id
+                                ? {...p, care_notes: p.care_notes.filter(note => note.id !== careNoteId)
+                                
+                            }: p
+                        )
+                            
+                        }: cat
                     )
                 )
             })
-            .catch(e => console.error(e))
+
+
+                .catch(e => console.error(e))
     }
 
     return (
         <div>
+            <span>Username: {user.username} </span>
             <div>
-                <Link to={`/users/${user.id}`}>Home</Link>
+                <Link to={`/`}>Home</Link>
+                
             </div>
             {category?.id && (
                 <div>
-                    <Link to={`/users/categories/${category.id}`}>Category</Link>
+                   
+                    <Link to={`/categories/${category.id}/plants`}>Category</Link>
                 </div>
             )}
 
@@ -201,7 +213,7 @@ const PlantDetails = () => {
                         <li>Frequency: {note.frequency}</li>
                         <li>Started Date: {note.starting_date}</li>
                         <li>Upcoming Date: {note.next_care_date}</li>
-                        <button className="btn" onClick={() => handleDeleteCareNote(note.id)}>Delete</button>
+                        <button className="btn care_note_delete_btn" onClick={() => handleDeleteCareNote(note.id)}>Delete</button>
                         <button className="btn" onClick={() => setEditingNoteId(note.id)}>Edit</button>
 
 
@@ -249,7 +261,7 @@ const PlantDetails = () => {
                                         <div>{formik.errors.starting_date}</div>
                                     )}
                                 </div>
-                                <button className="edit_btn" type="submit">Edit Care Note</button>
+                                <button className="edit_btn green" type="submit">Edit Care Note</button>
 
                             </form>
                         )}

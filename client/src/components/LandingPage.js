@@ -1,45 +1,53 @@
 
-
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import AppContext from "./AppContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PlantForm from "./PlantForm";
 import Logout from "./Logout";
 
-
 const LandingPage = () => {
+    const { user, userCategories, loading } = useContext(AppContext);
+    const navigate = useNavigate();
 
-    const { user, userCategories } = useContext(AppContext)
-    //    console.log('🟢user categories', userCategories)
-    // 
+    useEffect(() => {
+        if (!loading && !user) {
+            navigate("/login")
+        }
+    }, [user, loading, navigate])
 
-    if (!user || !user.username) {
-        return <p>User not found...</p>
-    }
-        
+    if (loading) return <p>Loading...</p>
+
+
+    
+
     return (
         <div>
-            {user.username && <h3>Welcome: {user.username}</h3>}
+            {user?.username && <span>Username: {user.username}</span>}
+            <Logout />
+            <h4>My Categories</h4>
 
             <div>
-                {userCategories && userCategories.length > 0 && (
-                    
+                {userCategories?.length > 0 && (
                     userCategories.map((cat) => (
-                        
                         <div key={cat.id}>
-                            <Link to={`/users/categories/${cat.id}`}
-                            state={{categoryId: cat.id}}
-                            >{cat.category_name}</Link>
+                            <Link
+                                to={`/categories/${cat.id}/plants`}
+                                state={{ categoryId: cat.id }}
+                            >
+                                {cat.category_name}
+                            </Link>
                         </div>
                     ))
                 )}
             </div>
 
             <PlantForm />
-            <Logout/>
-           
         </div>
-    )
-}
+    );
+};
 
-export default LandingPage
+export default LandingPage;
+
+
+
+

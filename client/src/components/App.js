@@ -1,6 +1,6 @@
 /////////////////////////////////////
 
-import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { AppProvider } from "./AppContext";
 import Signup from "./Signup";
 
@@ -11,26 +11,40 @@ import PlantForm from "./PlantForm";
 import PlantDetails from "./plantDetais";
 import CareNoteForm from "./CareNoteForm";
 import Logout from "./Logout";
+import NewCategory from "./NewCategory";
+
 
 
 function App() {
   return (
     <AppProvider>
       <Router>
+
         <Routes>
+          <Route path="/" element={<LandingPage />} />
+
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/users/:user_id" element={<LandingPage />}/>
-          <Route path="/users/categories/:categoryId" element={<UserCategory/> } /> 
-          <Route path="/new_plant" element={<PlantForm/> } />
-          
-          <Route path="/plants/:plantId/details/:categoryId" element={<PlantDetails />} />
+          <Route path="/logout" element={<Logout />} />
 
-          <Route path="/new_care_note" element={<CareNoteForm/> } />
-          {/* <Route path="/logout" element={<Logout/> } /> */}
-          
-           
+
+          {/* <Route path="/" element={<LandingPage />} /> */}
+
+
+          <Route path="/categories/:categoryId/plants" element={<UserCategory />} />
+
+
+          <Route path="/plants/new" element={<PlantForm />} />
+
+          <Route path="/plants/:plantId" element={<PlantDetails />} />
+
+          <Route path="/care_notes/new" element={<CareNoteForm />} />
+          <Route path="/categories/new" element={<NewCategory />} />
+
         </Routes>
+
+
+
       </Router>
     </AppProvider>
   )
@@ -39,3 +53,5 @@ function App() {
 }
 
 export default App;
+
+

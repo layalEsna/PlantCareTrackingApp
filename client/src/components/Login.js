@@ -1,4 +1,3 @@
-
 import React, { useState, useContext } from 'react'
 import AppContext from './AppContext'
 import { useFormik } from 'formik'
@@ -6,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import * as Yup from 'yup'
 
 const Login = () => {
-    const { user, setUser, fetchUserData } = useContext(AppContext)
+    const { setUser, setUserCategories } = useContext(AppContext)
     const [errorMessage, setErrorMessage] = useState('')
     const navigate = useNavigate()
 
@@ -27,39 +26,43 @@ const Login = () => {
                 .min(8, 'Password must be at least 8 characters.')
                 .matches(passwordPattern, 'Password must include at least 1 lowercase letter, 1 uppercase letter, and 1 special character (!@#$%^&*).'),
         }),
-        onSubmit: async (values) => {
-            try {
-                console.log("Submitting login request with values:", values)
-                
-             
-                const response = await fetch('/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(values)
+        onSubmit: (values) => {
+            setErrorMessage('')
+            console.log("Submitting login request with values:", values)
+
+            fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(values)
+            })
+                .then(res => res.json().then(data => ({ ok: res.ok, data })))
+                .then(({ ok, data }) => {
+                    if (!ok || data.error) {
+                        throw new Error(data.error || 'Login failed.')
+                    }
+
+                    return fetch('/check_session')
                 })
-
-                const data = await response.json()
-
-                if (!response.ok || data.error) {
-                    throw new Error(data.error || 'Login failed.')
-                }
-
-
-                await fetchUserData() 
-                navigate(`/users/${data.id}`)
-                // setUser(data)
-                // navigate(`/users/${data.id}`) 
-
-            } catch (error) {
-                setErrorMessage(error.message)
-            }
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('Failed to fetch user session.')
+                    }
+                    return res.json()
+                })
+                .then(sessionData => {
+                    setUser(sessionData)
+                    setUserCategories(sessionData.categories || [])
+                    navigate('/')
+                })
+                .catch(error => {
+                    setErrorMessage(error.message)
+                })
         }
     })
 
     return (
         <div>
-           
-<h3>Login</h3>
+            <h3>Login</h3>
             {errorMessage && <div className="error">{errorMessage}</div>}
 
             <form onSubmit={formik.handleSubmit}>
@@ -103,3 +106,9 @@ const Login = () => {
 }
 
 export default Login
+
+
+
+
+
+
