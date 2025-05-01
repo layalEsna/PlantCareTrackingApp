@@ -8,6 +8,13 @@ const UserCategory = () => {
   const { state } = useLocation();
   const { categoryId } = useParams();
   const navigate = useNavigate();
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/login");
+    }
+  }, [user, loading, navigate]);
+
+
 
   if (loading || !user) return <p>Loading...</p>
 

@@ -13,7 +13,7 @@ import * as Yup from 'yup'
 
 
 const PlantDetails = () => {
-    const { user, userCategories, setUserCategories } = useContext(AppContext);
+    const { user, userCategories, setUserCategories,loading } = useContext(AppContext);
     
     const { plantId } = useParams()
     const { state } = useLocation()
@@ -98,7 +98,13 @@ const PlantDetails = () => {
 
     })
 
+    useEffect(() => {
+        if (!loading && !user) {
+          navigate("/login");
+        }
+      }, [user, loading, navigate]);
     
+   
 
     if (!user) return null
 
@@ -109,6 +115,8 @@ const PlantDetails = () => {
     if (!userCategories || userCategories.length === 0) return <p>You need to login...</p>
    
     if (!plant) return <p>Plant not found...</p>
+
+
 
     const handleDelete = (plantIdToDelete) => {
         fetch(`/plants/${plantIdToDelete}`, {
@@ -183,6 +191,7 @@ const PlantDetails = () => {
 
                 .catch(e => console.error(e))
     }
+
 
     return (
         <div>

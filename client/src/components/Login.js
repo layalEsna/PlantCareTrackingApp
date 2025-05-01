@@ -62,12 +62,12 @@ const Login = () => {
 
     return (
         <div>
-            <h3>Login</h3>
+            <h3>Back to Your Garden – Log In</h3>
             {errorMessage && <div className="error">{errorMessage}</div>}
 
             <form onSubmit={formik.handleSubmit}>
                 <div>
-                    <label htmlFor="username">Username:</label>
+                    <label htmlFor="username">Username:<span className="required">*</span></label>
                     <input
                         id="username"
                         type="text"
@@ -82,7 +82,7 @@ const Login = () => {
                 </div>
 
                 <div>
-                    <label htmlFor="password">Password:</label>
+                    <label htmlFor="password">Password:<span className="required">*</span></label>
                     <input
                         id="password"
                         type="password"

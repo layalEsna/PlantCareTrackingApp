@@ -80,11 +80,11 @@ const Signup = () => {
 
     return (
         <div>
-            <h3>Create an Account</h3>
+            <h3>Welcome to Plant Tracker! Create an Account:</h3>
 
             <form onSubmit={formik.handleSubmit}>
                 <div>
-                    <label htmlFor='username'>username:</label>
+                    <label htmlFor='username'>username:<span className="required">*</span></label>
                     <input
                         id='username'
                         type='text'
@@ -98,7 +98,7 @@ const Signup = () => {
                     )}
                 </div>
                 <div>
-                    <label htmlFor='password'>password:</label>
+                    <label htmlFor='password'>password:<span className="required">*</span></label>
                     <input
                         id='password'
                         type='password'
@@ -113,7 +113,7 @@ const Signup = () => {
 
                 </div>
                 <div>
-                    <label htmlFor='confirm_password'>confirm password:</label>
+                    <label htmlFor='confirm_password'>confirm password:<span className="required">*</span></label>
                     <input
                         id='confirm_password'
                         type='password'

@@ -1,6 +1,6 @@
 # app.py
 
-from flask import Flask, request, make_response, jsonify, session, redirect, url_for
+from flask import Flask, request, make_response, jsonify, session, redirect, url_for, send_from_directory
 from flask_restful import Api, Resource
 from flask_cors import CORS
 from server.config import Config
@@ -11,11 +11,16 @@ from flask_migrate import Migrate
 from marshmallow import ValidationError
 from collections import defaultdict
 
+# from flask import send_from_directory
+
+
 load_dotenv()
 import os
 
 # Initialize Flask app
 app = Flask(__name__)
+# app = Flask(__name__, static_folder='../client/build', static_url_path='/')
+
 
 # Set app configurations
 app.config.from_object(Config)
@@ -277,17 +282,34 @@ class CareNoteForm(Resource):
         return care_note_data, 201
     
 class DeletePlant(Resource):
-    def delete(self, plant_id):
+     def delete(self, plant_id):
         user_id = session.get('user_id')
         if not user_id:
             return {'error': 'Unauthorized'}, 401
-        plant = Plant.query.filter(Plant.id == plant_id, Plant.user_id == user_id).first()
+        user = User.query.filter(User.id == user_id).first()
+        plant = user.plants.filter(Plant.id == plant_id).first()
+
+        # plant = Plant.query.filter(Plant.id == plant_id, Plant.user_id == user_id).first()
         if not plant:
             return {'error': 'Plant not found or you do not have permission to delete it.'}, 404
 
         db.session.delete(plant)
         db.session.commit()
         return {'message': 'Plant deleted successfully.'}, 200
+
+    
+# class DeletePlant(Resource):
+#     def delete(self, plant_id):
+#         user_id = session.get('user_id')
+#         if not user_id:
+#             return {'error': 'Unauthorized'}, 401
+#         plant = Plant.query.filter(Plant.id == plant_id, Plant.user_id == user_id).first()
+#         if not plant:
+#             return {'error': 'Plant not found or you do not have permission to delete it.'}, 404
+
+#         db.session.delete(plant)
+#         db.session.commit()
+#         return {'message': 'Plant deleted successfully.'}, 200
 
 
 class DeleteCareNote(Resource):
@@ -296,10 +318,6 @@ class DeleteCareNote(Resource):
         user_id = session.get('user_id')
         if not user_id:
             return {'error': 'Unauthorized.'}, 401
-                    
-            
-       
-
 
         care_note = CareNote.query.join(Plant).filter(
         CareNote.id == care_note_id,

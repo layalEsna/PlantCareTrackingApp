@@ -4,7 +4,10 @@ const AppContext = createContext();
  
 
 export const AppProvider = ({ children }) => {
-    const [user, setUser] = useState(null)
+     const [user, setUser] = useState(null)
+    // const [user, setUser] = useState({
+    //     usrname: ''
+    // })
     const [userCategories, setUserCategories] = useState([])
     const [allCategories, setAllCategories] = useState([])
     const [loading, setLoading] = useState(true)

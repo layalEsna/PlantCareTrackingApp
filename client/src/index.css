@@ -1,3 +1,8 @@
+
+body{
+  background-color: rgb(220, 234, 220);
+}
+
 :root {
   --bg: #282c34;
   --header: #fff;
@@ -101,4 +106,5 @@ span {
 .green{
   background-color: rgb(145, 205, 145);
 }
+
 

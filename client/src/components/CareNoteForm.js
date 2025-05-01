@@ -90,7 +90,7 @@ const CareNoteForm = ({ plantId, onAddNote }) => {
     })
     useEffect(() => {
         if (!user || user.error) {
-            navigate("/login");
+            navigate("/login")
         }
     }, [user])
 
