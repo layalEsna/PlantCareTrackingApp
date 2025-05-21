@@ -1,57 +1,60 @@
 🌿 PlantCare App
-
 Overview
-PlantCare is a full-stack web application that helps plant enthusiasts track their plants and manage care routines like watering, pruning, and fertilizing. Users can create an account, add plants, assign them to categories, and add personalized care notes with schedules and reminders.
+PlantCare is a full-stack web application that helps plant enthusiasts track their plants and manage care routines like watering, pruning, and fertilizing.
 
-Built using Flask for the backend API and React for the frontend client.
+Users can:
 
-Features
+Create an account
+
+Add and categorize plants
+
+Add personalized care notes with schedules and reminders
+
+Built with Flask (Python) on the backend and React (JavaScript) on the frontend.
+
+✨ Features
 🪴 User authentication (signup, login)
 
 🌱 Add, edit, and delete plants
 
 🗂 Categorize plants (e.g., Herbs, Indoor, Succulents)
 
-📅 Add care routines per plant (e.g., watering every 3 days)
+📅 Add and update care routines (e.g., watering every 3 days)
 
-🔁 Auto-generate and update care reminders
+🔁 Auto-generate care reminders
 
 🔍 Filter plants by category
 
 🎨 Responsive UI with plant details and care timeline
 
-Tech Stack
-Frontend	Backend	Database	Other
+🛠 Tech Stack
+Frontend	Backend	Database	Other Tools
 React	Flask	SQLite	Flask-Migrate, Flask-RESTful, SQLAlchemy-Serializer, Formik, Marshmallow
 
 🚀 Getting Started
 1. Clone the Repository
-bash
-Copy code
-git clone https://github.com/<your-username>/plantcare-app.git
-cd plantcare-app
+git clone https://github.com/layalEsna/PlantCareTrackingApp.git
+cd PlantCareTrackingApp
+
 2. Backend Setup (Flask)
-bash
-Copy code
 cd server
 pipenv install
 pipenv shell
 flask db init
 flask db revision -m "Initial migration"
 flask db upgrade
-python seed.py        # Optional: add initial test data
-python app.py         # Runs on http://localhost:5555
+python seed.py        # Optional: adds initial test data
+python app.py         # Runs backend on http://localhost:5555
+
+
 3. Frontend Setup (React)
-bash
-Copy code
 npm install --prefix client
-npm start --prefix client    # Runs on http://localhost:3000
-📁 Directory Structure
-bash
-Copy code
-plantcare-app/
-├── client/           # React frontend
-├── server/           # Flask backend
+npm start --prefix client    # Runs frontend on http://localhost:3000
+
+📁 Project Structure
+PlantCareTrackingApp/
+├── client/               # React frontend
+├── server/               # Flask backend
 │   ├── app.py
 │   ├── config.py
 │   ├── models.py
@@ -60,40 +63,37 @@ plantcare-app/
 ├── Pipfile
 ├── README.md
 └── ...
-🔌 API Endpoints (Expanded)
-Method	Endpoint	Description
-GET	/plants	Fetch all plants
-POST	/plants	Add a new plant
-PATCH	/plants/<id>	Update a specific plant
-DELETE	/plants/<id>	Delete a plant
-GET	/categories	Get all categories
-POST	/categories	Create a new category
-GET	/care_notes	Get all care notes
-POST	/care_notes	Add a new care note
-POST	/signup	Register a new user
-POST	/login	Log in a user
-DELETE	/logout	Log out a user
 
-🧭 Client-Side Routes (React)
-Route	Component	Purpose
-/	LandingPage	Home screen after login
-/signup	Signup	User registration form
-/login	Login	User login form
-/logout	Logout	Logs out the current user
-/categories/new	NewCategory	Add a new category
-/categories/:categoryId/plants	UserCategory	Show plants in a selected category
-/plants/new	PlantForm	Add a new plant
-/plants/:plantId	PlantDetails	View a plant’s detail page
-/care_notes/new	CareNoteForm	Add a new care note for a plant
+🌐 API Endpoints
+| Endpoint                    | Method | Description                           |
+| --------------------------- | ------ | ------------------------------------- |
+| `/check_session`            | GET    | Check if the user is logged in        |
+| `/signup`                   | POST   | Register a new user                   |
+| `/login`                    | POST   | Authenticate a user and start session |
+| `/logout`                   | POST   | Terminate user session                |
+| `/categories`               | GET    | Get list of plant categories          |
+| `/categories/new`           | POST   | Create a new category                 |
+| `/plants/new`               | POST   | Add a new plant                       |
+| `/plants/:plant_id`         | DELETE | Delete a plant by ID                  |
+| `/care_notes/new`           | POST   | Add a care note for a plant           |
+| `/care_notes/:care_note_id` | DELETE | Delete a care note by ID              |
+| `/care_notes/:care_note_id` | PUT    | Update an existing care note by ID    |
 
-🔮 Future Features
-📱 Mobile responsiveness
-
-🧠 AI care suggestions based on plant type
+🧭 React Routes
+| Route                            | Component    | Purpose                          |
+| -------------------------------- | ------------ | -------------------------------- |
+| `/`                              | LandingPage  | Home screen after login          |
+| `/signup`                        | Signup       | User registration form           |
+| `/login`                         | Login        | User login form                  |
+| `/logout`                        | Logout       | Logs out the current user        |
+| `/categories/new`                | NewCategory  | Add a new category               |
+| `/categories/:categoryId/plants` | UserCategory | Show plants in selected category |
+| `/plants/new`                    | PlantForm    | Add a new plant                  |
+| `/plants/:plantId`               | PlantDetails | View plant detail page           |
+| `/care_notes/new`                | CareNoteForm | Add care note to a plant         |
 
 🤝 Contributing
-Pull requests welcome! For major changes, please open an issue first to discuss what you'd like to change.
+Pull requests are welcome! For major changes, please open an issue first to discuss your proposed improvements.
 
 📄 License
-MIT
-
+MIT License
